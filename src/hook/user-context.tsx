@@ -1,7 +1,9 @@
 /* eslint-disable react-refresh/only-export-components */
 
+import { users } from '@/data/users'
 import { User } from '@/types/user'
 import React, { createContext, FC, useEffect, useState } from 'react'
+import { useToast } from './use-toast'
 
 type UserType = {
   user: User | null
@@ -16,6 +18,8 @@ interface UserProviderProps {
 }
 
 export const UserProvider: FC<UserProviderProps> = ({ children }) => {
+  const { toast } = useToast()
+
   const [user, setUser] = useState<User | null>(null)
 
   useEffect(() => {
@@ -30,11 +34,20 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     setUser(null)
   }
 
-  const handleLogin = (username: string, password: string) => {
-    const cred = { username, password }
-    localStorage.setItem('user', JSON.stringify(cred))
-    const id = 24
-    setUser({ id, username, avatar: '' })
+  const handleLogin = (pseudo: string, password: string) => {
+    const userFound = users.find((u) => u.pseudo === pseudo && u.password === password)
+    if (userFound) {
+      localStorage.setItem('user', JSON.stringify(userFound))
+      setUser(userFound)
+      toast({
+        title: 'Vous êtes connecté',
+      })
+    } else {
+      toast({
+        title: "Nom d'utilisateur ou mot de passe incorrect",
+        variant: 'destructive',
+      })
+    }
   }
 
   return (

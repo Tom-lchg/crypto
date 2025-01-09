@@ -1,6 +1,7 @@
 import { UserContext } from '@/hook/user-context'
 import { FC, useContext } from 'react'
 import { Link } from 'react-router'
+import { Toaster } from './ui/toaster'
 
 const Nav: FC = () => {
   const { user, handleLogout } = useContext(UserContext) || {}
@@ -17,7 +18,7 @@ const Nav: FC = () => {
         <div className='flex items-center space-x-4'>
           {user ? (
             <>
-              <span className='text-lg font-medium text-white'>Bonjour, {user.username}</span>
+              <span className='text-lg font-medium text-white'>Bonjour, {user.pseudo}</span>
               <button
                 onClick={handleLogout}
                 className='bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all'
@@ -32,6 +33,7 @@ const Nav: FC = () => {
           )}
         </div>
       </div>
+      <Toaster />
     </nav>
   )
 }

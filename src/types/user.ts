@@ -1,5 +1,5 @@
 export interface User {
-  username: string
+  pseudo: string
   id: number
   avatar: string
 }
