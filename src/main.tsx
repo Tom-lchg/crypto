@@ -4,7 +4,6 @@ import '@/styles/index.css'
 import { createRoot } from 'react-dom/client'
 import { Route, BrowserRouter as Router, Routes } from 'react-router'
 import Nav from './components/nav'
-import { Toaster } from './components/ui/toaster'
 import Dashboard from './components/User/Dashboard'
 import LoginForm from './components/User/LoginForm'
 import { UserProvider } from './hook/user-context'
@@ -28,7 +27,6 @@ const Main = () => {
           <Route path='/details/:id' element={<CryptoDetails />} />
           {/* <Route path='/blog/:id' element={<Blog />} /> */}
         </Routes>
-        <Toaster />
       </Router>
     </UserProvider>
   )
