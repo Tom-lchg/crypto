@@ -5,6 +5,7 @@ import Nav from './components/nav';
 import LoginForm from './components/User/LoginForm';
 import Dashboard from './components/User/Dashboard';
 import WalletApp from './components/Wallet/Wallet';
+import Portefeuille from './components/Wallet/Portefeuille';
 import '@/styles/index.css'
 
 
@@ -37,6 +38,7 @@ const Main: React.FC = () => {
         <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
         <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/wallet" element={<WalletApp/>}/>
+        <Route path="/portefeuille" element={<Portefeuille/>}/>
       </Routes>
     </Router>
   );

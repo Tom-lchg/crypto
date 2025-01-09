@@ -15,7 +15,8 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
           <Link to="/" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Accueil</Link>
           <Link to="/dashboard" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Tableau de bord</Link>
           <Link to="/transactions" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Transactions</Link>
-          <Link to="/wallet" className="text-xl font-semibold text-blue-400 hover:text-blue-500">My Wallet</Link>
+          <Link to="/wallet" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Crypto Dépot</Link>
+          <Link to="/portefeuille" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Mon Portefeuille</Link>
         </div>
 
 

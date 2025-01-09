@@ -16,7 +16,7 @@ interface Wallet {
 
 const WalletApp: React.FC = () => {
   const [wallet, setWallet] = useState<Wallet>({
-    balance: { USD: 0, BTC: 0, ETH: 0 },
+    balance: { ETH: 0, USDT: 0, XRP: 0 , BNB:0 , SOL:0},
     transactions: [],
   });
   const [amount, setAmount] = useState<number>(0);
@@ -104,9 +104,11 @@ const WalletApp: React.FC = () => {
           placeholder={`Amount in ${currency}`}
         />
         <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL')}>
-          <option value="USD">USD</option>
-          <option value="BTC">BTC</option>
-          <option value="ETH">ETH</option>
+        <option value="ETH">ETH</option>
+           <option value="USDT">USDT</option>
+           <option value="XRP">XRP</option>
+           <option value="BNB">BNB</option>
+           <option value="SOL">SOL</option>
         </select>
         <button onClick={handleDeposit}>Deposit</button>
       </div>
