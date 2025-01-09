@@ -1,43 +1,41 @@
-import Home from '@/pages/home';
-import '@/styles/index.css';
-import { createRoot } from 'react-dom/client';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router';
+import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
+import { BrowserRouter as Router, Route, Routes } from 'react-router';
 import Nav from './components/nav';
 import LoginForm from './components/User/LoginForm';
-import { useEffect } from 'react';
 import Dashboard from './components/User/Dashboard';
 
-const App = () => {
-  const navigate = useNavigate();
+const Main: React.FC = () => {
+  const [user, setUser] = useState<{ username: string } | null>(null);
+
+  
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser)); 
+    }
+  }, []);
 
   const handleLogin = (username: string, password: string) => {
-
-    const user = { username, token: 'dummyToken' };
-    localStorage.setItem('user', JSON.stringify(user));
-    navigate('/dashboard');
+    const user = { username, password };
+    localStorage.setItem('user', JSON.stringify(user)); 
+    setUser(user); 
   };
 
-  useEffect(() => {
-    const user = localStorage.getItem('user');
-    if (user) {
-      navigate('/dashboard');
-    }
-  }, [navigate]);
+  const handleLogout = () => {
+    localStorage.removeItem('user'); 
+    setUser(null); 
+  };
 
   return (
-    <>
-      <Nav />
+    <Router>
+      <Nav user={user} onLogout={handleLogout} />
       <Routes>
-        <Route path='/' element={<Home />} />
-        <Route path='/login' element={<LoginForm onLogin={handleLogin} />} />
-        <Route path='/dashboard' element={<Dashboard />} />
+        <Route path="/login" element={<LoginForm onLogin={handleLogin} />} />
+        <Route path="/dashboard" element={<Dashboard />} />
       </Routes>
-    </>
+    </Router>
   );
 };
 
-createRoot(document.getElementById('root')!).render(
-  <BrowserRouter>
-    <App />
-  </BrowserRouter>
-);
+ReactDOM.render(<Main />, document.getElementById('root'));
