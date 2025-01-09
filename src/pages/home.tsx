@@ -91,7 +91,7 @@ const Home: FC = (): JSX.Element => {
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
                     <TooltipTrigger>
-                      <Link to={`/details/${crypto.nameid}`}>
+                      <Link to={`/details/${crypto.id}`}>
                         <Info size={20} />
                       </Link>
                     </TooltipTrigger>
@@ -103,7 +103,7 @@ const Home: FC = (): JSX.Element => {
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
                     <TooltipTrigger>
-                      <Link to={`/traide/${crypto.nameid}`}>
+                      <Link to={`/traide/${crypto.id}`}>
                         <GitPullRequestCreate size={20} />
                       </Link>
                     </TooltipTrigger>
