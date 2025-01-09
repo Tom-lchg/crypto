@@ -1,18 +1,25 @@
-import React, { FC, useState } from 'react'
+import { UserContext } from '@/hook/user-context'
+import React, { FC, useContext, useState } from 'react'
 import { Input } from '../ui/input'
 
-interface LoginFormProps {
-  onLogin: (username: string, password: string) => void
-}
+const LoginForm: FC = () => {
+  const userContext = useContext(UserContext)
 
-const LoginForm: FC<LoginFormProps> = ({ onLogin }) => {
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    onLogin(username, password)
+    handleLogin(username, password)
+    setUsername('')
+    setPassword('')
   }
+
+  if (!userContext) {
+    return null
+  }
+
+  const { handleLogin } = userContext
 
   return (
     <div className='flex items-center justify-center mt-24'>

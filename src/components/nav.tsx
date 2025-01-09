@@ -1,17 +1,17 @@
-import { FC } from 'react'
+import { UserContext } from '@/hook/user-context'
+import { FC, useContext } from 'react'
 import { Link } from 'react-router'
 
-interface NavProps {
-  user: { username: string } | null
-  onLogout: () => void
-}
+const Nav: FC = () => {
+  const { user, handleLogout } = useContext(UserContext) || {}
 
-const Nav: FC<NavProps> = ({ user, onLogout }) => {
   return (
     <nav className='py-4 px-8'>
       <div className='flex items-center justify-between'>
         <div className='space-x-4'>
-          <Link to='/'>Home</Link>
+          <Link to='/'>Markets</Link>
+          <Link to='/wallet'>Wallets</Link>
+          <Link to='/portefeuille'>Portefeuille</Link>
         </div>
 
         <div className='flex items-center space-x-4'>
@@ -19,7 +19,7 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
             <>
               <span className='text-lg font-medium text-white'>Bonjour, {user.username}</span>
               <button
-                onClick={onLogout}
+                onClick={handleLogout}
                 className='bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all'
               >
                 Déconnexion
