@@ -8,7 +8,7 @@ import Dashboard from './components/User/Dashboard';
 const Main: React.FC = () => {
   const [user, setUser] = useState<{ username: string } | null>(null);
 
-  
+ 
   useEffect(() => {
     const storedUser = localStorage.getItem('user');
     if (storedUser) {

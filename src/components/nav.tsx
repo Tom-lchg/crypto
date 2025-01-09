@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import  { FC } from 'react';
 import { Link } from 'react-router';
 
 interface NavProps {
@@ -30,7 +30,9 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
               </button>
             </>
           ) : (
-            <Link to="/login" className="text-lg font-medium text-blue-400 hover:text-blue-500">Connexion</Link>
+            <Link to="/login" className="text-lg font-medium text-blue-400 hover:text-blue-500">
+              Connexion
+            </Link>
           )}
         </div>
       </div>
