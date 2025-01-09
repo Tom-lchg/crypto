@@ -14,7 +14,7 @@ interface Wallet {
 }
 
 const fetchCryptoPrices = async () => {
-
+ 
   return {
     ETH: 1600,
     USDT: 1,
@@ -22,6 +22,14 @@ const fetchCryptoPrices = async () => {
     BNB: 300,
     SOL: 20,
   };
+};
+
+const cryptoImages: { [key: string]: string } = {
+  ETH: '/src/assets/eth.png',
+  USDT: '/src/assets/usdt.png',
+  XRP: '/src/assets/xrp.png',
+  BNB: '/src/assets/bnb.png',
+  SOL: '/src/assets/sol.png',
 };
 
 const Portefeuille: React.FC = () => {
@@ -102,7 +110,8 @@ const Portefeuille: React.FC = () => {
       <h2>Balances:</h2>
       <ul>
         {Object.entries(wallet.balance).map(([curr, bal]) => (
-          <li key={curr}>
+          <li key={curr} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            {cryptoImages[curr] && <img src={cryptoImages[curr]} alt={curr} style={{ width: '30px', height: '30px', marginRight: '10px' }} />}
             {curr}: {bal.toFixed(8)} {curr !== 'USD' && cryptoPrices[curr] ? `($${(bal * cryptoPrices[curr]).toFixed(2)})` : ''}
             {curr !== 'USD' && (
               <button style={{ marginLeft: '10px' }} onClick={() => handleBuyCrypto(curr)}>
@@ -127,4 +136,3 @@ const Portefeuille: React.FC = () => {
 };
 
 export default Portefeuille;
-
