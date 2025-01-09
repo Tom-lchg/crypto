@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 interface Transaction {
   id: number;
   type: 'deposit' | 'withdrawal';
   amount: number;
-  currency: 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL';
-  address?: string; 
+  currency: 'ETH' | 'USDT' | 'XRP' | 'BNB' | 'SOL';
+  address?: string;
   date: string;
 }
 
@@ -16,12 +16,25 @@ interface Wallet {
 
 const WalletApp: React.FC = () => {
   const [wallet, setWallet] = useState<Wallet>({
-    balance: { ETH: 0, USDT: 0, XRP: 0 , BNB:0 , SOL:0},
+    balance: { ETH: 0, USDT: 0, XRP: 0, BNB: 0, SOL: 0 },
     transactions: [],
   });
   const [amount, setAmount] = useState<number>(0);
-  const [currency, setCurrency] = useState<'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL'>('ETH');
+  const [currency, setCurrency] = useState<'ETH' | 'USDT' | 'XRP' | 'BNB' | 'SOL'>('ETH');
   const [address, setAddress] = useState('');
+
+ 
+  useEffect(() => {
+    const storedWallet = localStorage.getItem('wallet');
+    if (storedWallet) {
+      setWallet(JSON.parse(storedWallet));
+    }
+  }, []);
+
+ 
+  useEffect(() => {
+    localStorage.setItem('wallet', JSON.stringify(wallet));
+  }, [wallet]);
 
   const handleDeposit = () => {
     if (amount <= 0) {
@@ -103,12 +116,12 @@ const WalletApp: React.FC = () => {
           onChange={(e) => setAmount(Number(e.target.value))}
           placeholder={`Amount in ${currency}`}
         />
-        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL')}>
-        <option value="ETH">ETH</option>
-           <option value="USDT">USDT</option>
-           <option value="XRP">XRP</option>
-           <option value="BNB">BNB</option>
-           <option value="SOL">SOL</option>
+        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' | 'SOL')}>
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT</option>
+          <option value="XRP">XRP</option>
+          <option value="BNB">BNB</option>
+          <option value="SOL">SOL</option>
         </select>
         <button onClick={handleDeposit}>Deposit</button>
       </div>
@@ -122,12 +135,12 @@ const WalletApp: React.FC = () => {
           onChange={(e) => setAmount(Number(e.target.value))}
           placeholder={`Amount in ${currency}`}
         />
-        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL' )}>
-           <option value="ETH">ETH</option>
-           <option value="USDT">USDT</option>
-           <option value="XRP">XRP</option>
-           <option value="BNB">BNB</option>
-           <option value="SOL">SOL</option>
+        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' | 'SOL')}>
+          <option value="ETH">ETH</option>
+          <option value="USDT">USDT</option>
+          <option value="XRP">XRP</option>
+          <option value="BNB">BNB</option>
+          <option value="SOL">SOL</option>
         </select>
         <input
           type="text"
@@ -152,3 +165,4 @@ const WalletApp: React.FC = () => {
 };
 
 export default WalletApp;
+
