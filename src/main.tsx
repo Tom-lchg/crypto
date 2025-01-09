@@ -23,6 +23,8 @@ const Main = () => {
           <Route path='/' element={<Home />} />
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/wallet' element={<Wallet />} />
+          {/* <Route path='/details/:id' element={<CryptoDetails />} /> */}
+          {/* <Route path='/blog/:id' element={<Blog />} /> */}
         </Routes>
       </Router>
     </UserProvider>
