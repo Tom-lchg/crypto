@@ -5,6 +5,8 @@ import Nav from './components/nav';
 import LoginForm from './components/User/LoginForm';
 import Dashboard from './components/User/Dashboard';
 import WalletApp from './components/Wallet/Wallet';
+import '@/styles/index.css'
+
 
 const Main: React.FC = () => {
   const [user, setUser] = useState<{ username: string } | null>(null);

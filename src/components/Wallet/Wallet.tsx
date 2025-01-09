@@ -4,8 +4,8 @@ interface Transaction {
   id: number;
   type: 'deposit' | 'withdrawal';
   amount: number;
-  currency: 'USD' | 'BTC' | 'ETH';
-  address?: string; // Address is optional for deposits
+  currency: 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL';
+  address?: string; 
   date: string;
 }
 
@@ -20,7 +20,7 @@ const WalletApp: React.FC = () => {
     transactions: [],
   });
   const [amount, setAmount] = useState<number>(0);
-  const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD');
+  const [currency, setCurrency] = useState<'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL'>('ETH');
   const [address, setAddress] = useState('');
 
   const handleDeposit = () => {
@@ -103,7 +103,7 @@ const WalletApp: React.FC = () => {
           onChange={(e) => setAmount(Number(e.target.value))}
           placeholder={`Amount in ${currency}`}
         />
-        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'USD' | 'BTC' | 'ETH')}>
+        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL')}>
           <option value="USD">USD</option>
           <option value="BTC">BTC</option>
           <option value="ETH">ETH</option>
@@ -120,10 +120,12 @@ const WalletApp: React.FC = () => {
           onChange={(e) => setAmount(Number(e.target.value))}
           placeholder={`Amount in ${currency}`}
         />
-        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'USD' | 'BTC' | 'ETH')}>
-          <option value="USD">USD</option>
-          <option value="BTC">BTC</option>
-          <option value="ETH">ETH</option>
+        <select value={currency} onChange={(e) => setCurrency(e.target.value as 'ETH' | 'USDT' | 'XRP' | 'BNB' |'SOL' )}>
+           <option value="ETH">ETH</option>
+           <option value="USDT">USDT</option>
+           <option value="XRP">XRP</option>
+           <option value="BNB">BNB</option>
+           <option value="SOL">SOL</option>
         </select>
         <input
           type="text"
