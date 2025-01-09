@@ -56,7 +56,7 @@ const Home: FC = (): JSX.Element => {
       <section className='flex items-center gap-4'>
         <MarketOverviewCard title='Hot Coins' cryptos={hotCoins} />
         <MarketOverviewCard title='Top Gainer Coin' cryptos={topGainerCoin} />
-        <MarketOverviewCard title='Hot Coins' cryptos={topVolumeCoin} />
+        <MarketOverviewCard title='Top Volume Coin' cryptos={topVolumeCoin} />
       </section>
 
       <Table>
