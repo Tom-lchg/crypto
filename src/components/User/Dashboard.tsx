@@ -19,24 +19,15 @@ const Dashboard: React.FC = () => {
     }
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('user'); 
-    navigate('/login'); 
-  };
-
+ 
   return (
     <div className="dashboard">
       {user ? (
         <>
           <h1 className="text-2xl font-bold">Bienvenue, {user.username}!</h1>
           <p className="mt-4">Voici votre tableau de bord.</p>
-          <img src="/src/assets/Zemour.jpg" alt="" />
-          <button
-            onClick={handleLogout}
-            className="mt-6 bg-red-500 text-white py-2 px-4 rounded"
-          >
-            Déconnexion
-          </button>
+          <img src="/src/assets/Zemmour.jpg" alt="" />
+        
         </>
       ) : (
         <p>Chargement...</p>

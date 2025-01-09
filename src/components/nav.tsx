@@ -1,5 +1,5 @@
-import  { FC } from 'react';
-import { Link } from 'react-router';
+import { FC } from 'react';
+import { Link, useNavigate } from 'react-router';
 
 interface NavProps {
   user: { username: string } | null;
@@ -7,10 +7,17 @@ interface NavProps {
 }
 
 const Nav: FC<NavProps> = ({ user, onLogout }) => {
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    localStorage.removeItem('user'); 
+    onLogout(); 
+    navigate('/login'); 
+  };
+
   return (
     <nav className="bg-gray-800 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-   
         <div className="flex items-center space-x-4">
           <Link to="/" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Accueil</Link>
           <Link to="/dashboard" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Tableau de bord</Link>
@@ -19,13 +26,12 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
           <Link to="/portefeuille" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Mon Portefeuille</Link>
         </div>
 
-
         <div className="flex items-center space-x-4">
           {user ? (
             <>
               <span className="text-lg font-medium text-white">Bonjour, {user.username}</span>
               <button
-                onClick={onLogout}
+                onClick={handleLogout}
                 className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all"
               >
                 Déconnexion
@@ -43,4 +49,5 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
 };
 
 export default Nav;
+
 

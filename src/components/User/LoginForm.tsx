@@ -18,7 +18,7 @@ const LoginForm: FC<LoginFormProps> = ({ onLogin }) => {
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
         <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Connexion</h2>
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Username Field */}
+        
           <div>
             <label htmlFor="username" className="block text-sm font-medium text-gray-600">Nom d'utilisateur</label>
             <input
@@ -31,7 +31,6 @@ const LoginForm: FC<LoginFormProps> = ({ onLogin }) => {
             />
           </div>
 
-          {/* Password Field */}
           <div>
             <label htmlFor="password" className="block text-sm font-medium text-gray-600">Mot de passe</label>
             <input
@@ -44,7 +43,7 @@ const LoginForm: FC<LoginFormProps> = ({ onLogin }) => {
             />
           </div>
 
-          {/* Submit Button */}
+         
           <button
             type="submit"
             className="w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-all"
