@@ -34,7 +34,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
     const cred = { username, password }
     localStorage.setItem('user', JSON.stringify(cred))
     const id = 24
-    setUser({ id, username })
+    setUser({ id, username, avatar: '' })
   }
 
   return (
