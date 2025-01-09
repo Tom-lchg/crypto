@@ -14,7 +14,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ labels, data }) => {
     labels,
     datasets: [
       {
-        label: 'Preço da Criptomoeda',
+        label: 'Prix de la cryptomonnaie',
         data,
         borderColor: 'rgba(75, 192, 192, 1)',
         borderWidth: 2,
@@ -32,7 +32,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ labels, data }) => {
       },
       title: {
         display: true,
-        text: 'Evolução do Preço da Criptomoeda',
+        text: 'Evolution du prix de la cryptomonnaie',
       },
     },
   };

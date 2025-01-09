@@ -10,3 +10,13 @@ export async function getCryptos(): Promise<Array<Cryptos>> {
   const data: ApiCryptos = await res.json()
   return data.data
 }
+
+/**
+ *  Envoie les informations pour le graph
+ */
+
+export async function getCrypto(id: number): Promise<Array<Crypto>> {
+  const res = await fetch(`https://api.coinlore.net/api/tickers/?id=${id}`);
+  return await res.json();
+}
+
