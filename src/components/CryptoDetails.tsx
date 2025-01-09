@@ -1,8 +1,7 @@
-import React from "react";
-import { Link, useParams } from "react-router";
+import React, { FC } from "react";
 import CryptoChart from "./CryptoChart";
 
-function CryptoDetails: React.FC = ({ }) => {
+const CryptoDetails: FC = () => {
 
 
     const labels = ['Janvier', 'Février', 'Mars', 'Avril', 'Mai', 'Juin', 'Juillet', 'Août', 'Septembre', 'Octobre', 'Novembre', 'Décembre'];
