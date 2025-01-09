@@ -26,21 +26,21 @@ const Home: FC = (): JSX.Element => {
 
   useEffect(() => {
     async function fetchCryptos() {
-      const crypto = await getCryptos()
-      if (crypto === undefined) return []
-      setCryptos(crypto)
+      try {
+        const [crypto, hotCoins, topGainerCoin, topVolumeCoin] = await Promise.all([
+          getCryptos(),
+          getHotCoins(),
+          getTopGainerCoin(),
+          getTopVolumeCoin(),
+        ])
 
-      const hotCoins = await getHotCoins()
-      if (hotCoins === undefined) return []
-      setHotCoins(hotCoins)
-
-      const topGainerCoin = await getTopGainerCoin()
-      if (topGainerCoin === undefined) return []
-      setTopGainerCoin(topGainerCoin)
-
-      const topVolumeCoin = await getTopVolumeCoin()
-      if (topVolumeCoin === undefined) return []
-      setTopVolumeCoin(topVolumeCoin)
+        if (crypto) setCryptos(crypto)
+        if (hotCoins) setHotCoins(hotCoins)
+        if (topGainerCoin) setTopGainerCoin(topGainerCoin)
+        if (topVolumeCoin) setTopVolumeCoin(topVolumeCoin)
+      } catch (error) {
+        console.error('Failed to fetch cryptos:', error)
+      }
     }
 
     fetchCryptos()
