@@ -1,7 +1,6 @@
 import { UserContext } from '@/hook/user-context'
 import { FC, useContext } from 'react'
 import { Link } from 'react-router'
-import { Toaster } from './ui/toaster'
 
 const Nav: FC = () => {
   const { user, handleLogout } = useContext(UserContext) || {}
@@ -33,7 +32,6 @@ const Nav: FC = () => {
           )}
         </div>
       </div>
-      <Toaster />
     </nav>
   )
 }
