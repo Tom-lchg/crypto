@@ -3,8 +3,8 @@ import { Link } from 'react-router'
 
 const Nav: FC = (): JSX.Element => {
   return (
-    <nav>
-      <div className='max-w-7xl mx-auto flex items-center justify-between'>
+    <nav className='py-4 px-8'>
+      <div className='flex items-center justify-between'>
         <div className='space-x-4'>
           <Link to='/'>Home</Link>
           <Link to='/'>Home</Link>
