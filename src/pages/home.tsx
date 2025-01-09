@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import MarketOverviewCard from '@/components/market-overview-card'
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useFormatNumber } from '@/hook/use-convert-number'
 import { useIsNegative } from '@/hook/use-is-negative'
-import { getCryptos } from '@/lib/coin-lore'
+import { getCryptos, getHotCoins, getTopGainerCoin, getTopVolumeCoin } from '@/lib/coin-lore'
 import { Cryptos } from '@/types/cryptos'
 import { GitPullRequestCreate, Info } from 'lucide-react'
 import { FC, JSX, useEffect, useState } from 'react'
@@ -19,23 +20,45 @@ import { Link } from 'react-router'
 
 const Home: FC = (): JSX.Element => {
   const [cryptos, setCryptos] = useState<Array<Cryptos>>()
+  const [hotCoins, setHotCoins] = useState<Array<Cryptos>>()
+  const [topGainerCoin, setTopGainerCoin] = useState<Array<Cryptos>>()
+  const [topVolumeCoin, setTopVolumeCoin] = useState<Array<Cryptos>>()
 
   useEffect(() => {
     async function fetchCryptos() {
-      const response = await getCryptos()
-      if (response === undefined) return []
-      setCryptos(response)
+      const crypto = await getCryptos()
+      if (crypto === undefined) return []
+      setCryptos(crypto)
+
+      const hotCoins = await getHotCoins()
+      if (hotCoins === undefined) return []
+      setHotCoins(hotCoins)
+
+      const topGainerCoin = await getTopGainerCoin()
+      if (topGainerCoin === undefined) return []
+      setTopGainerCoin(topGainerCoin)
+
+      const topVolumeCoin = await getTopVolumeCoin()
+      if (topVolumeCoin === undefined) return []
+      setTopVolumeCoin(topVolumeCoin)
     }
+
     fetchCryptos()
   }, [])
 
-  console.log(cryptos)
-
   // dans le cas ou le fetch prend du temps
-  if (!cryptos) return <div>Loading...</div>
+  if (!cryptos || !hotCoins || !topGainerCoin || !topVolumeCoin) return <div>Loading...</div>
 
   return (
-    <main className='max-w-7xl mx-auto mt-14'>
+    <main className='max-w-7xl mx-auto mt-14 space-y-8'>
+      <h1 className='text-4xl font-medium'>Markets Overview</h1>
+
+      <section className='flex items-center gap-4'>
+        <MarketOverviewCard title='Hot Coins' cryptos={hotCoins} />
+        <MarketOverviewCard title='Top Gainer Coin' cryptos={topGainerCoin} />
+        <MarketOverviewCard title='Hot Coins' cryptos={topVolumeCoin} />
+      </section>
+
       <Table>
         <TableHeader>
           <TableRow className='text-xs'>
