@@ -68,7 +68,7 @@ const Wallet: React.FC = () => {
   }
 
   return (
-    <main className='max-w-7xl mx-auto mt-14'>
+    <main className='max-w-7xl mx-auto mt-24'>
       <section className='space-y-6'>
         <section className='flex gap-8 justify-between'>
           <article className='flex gap-4'>

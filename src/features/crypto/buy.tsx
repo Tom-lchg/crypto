@@ -43,7 +43,7 @@ const BuyCrypto: FC<IBuyCryptoProps> = ({ crypto }): JSX.Element => {
       <div className='border rounded-xl py-2 px-6 space-y-3'>
         <p className='text-zinc-400'>You spend</p>
         <p className={cn('text-xl font-medium', { 'text-zinc-500': spend === 0 })}>
-          {spend === 0 ? '10, 50,000' : useFormatNumberCrypto(String(spend))}
+          {spend === 0 ? '10, 50,000' : `$ ${useFormatNumberCrypto(String(spend))}`}
         </p>
       </div>
       <Button className='w-full' size='lg'>

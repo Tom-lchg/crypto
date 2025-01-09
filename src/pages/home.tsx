@@ -50,7 +50,7 @@ const Home: FC = (): JSX.Element => {
   if (!cryptos || !hotCoins || !topGainerCoin || !topVolumeCoin) return <div>Loading...</div>
 
   return (
-    <main className='max-w-7xl mx-auto mt-14 space-y-8'>
+    <main className='max-w-7xl mx-auto mt-24 space-y-8'>
       <h1 className='text-4xl font-medium'>Markets Overview</h1>
 
       <section className='flex items-center gap-4'>

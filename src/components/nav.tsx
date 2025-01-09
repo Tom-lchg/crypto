@@ -6,7 +6,7 @@ const Nav: FC = () => {
   const { user, handleLogout } = useContext(UserContext) || {}
 
   return (
-    <nav className='py-4 px-8'>
+    <nav className='py-4 px-8 fixed top-0 w-full bg-background'>
       <div className='flex items-center justify-between'>
         <div className='space-x-4'>
           <Link to='/'>Markets</Link>

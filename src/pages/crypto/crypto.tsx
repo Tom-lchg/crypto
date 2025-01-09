@@ -34,7 +34,7 @@ const CryptoDetails: FC = () => {
   if (!crypto) return <div>Loading...</div>
 
   return (
-    <section className='max-w-7xl mx-auto mt-14 grid grid-cols-[1fr_.5fr] gap-14 pb-14'>
+    <section className='max-w-7xl mx-auto mt-24 grid grid-cols-[1fr_.5fr] gap-14 pb-14'>
       <article className='space-y-16'>
         <section className='flex justify-between items-start'>
           <div className='space-y-2'>
