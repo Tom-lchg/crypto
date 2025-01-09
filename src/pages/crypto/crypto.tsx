@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import UserMessage from '@/components/User/user-message'
 import BuyCrypto from '@/features/crypto/buy'
 import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { getCrypto } from '@/lib/coin-lore'
@@ -81,6 +82,20 @@ const CryptoDetails: FC = () => {
       <article className='space-y-6'>
         <section className='border rounded-xl p-6 w-full'>
           <BuyCrypto crypto={{ price_usd: crypto.price_usd, symbol: crypto.symbol }} />
+        </section>
+
+        <section className='border rounded-xl p-6 w-full'>
+          <h2 className='text-2xl font-medium mb-4'>Square</h2>
+          <article>
+            <UserMessage
+              message='$BTC why screen becomes grrreen all'
+              user={{
+                avatar:
+                  'https://images.unsplash.com/photo-1727891521863-ba8c598bad4e?q=80&w=1934&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D',
+                username: 'king of gainer',
+              }}
+            />
+          </article>
         </section>
       </article>
     </section>
