@@ -10,14 +10,15 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
   return (
     <nav className="bg-gray-800 text-white shadow-lg">
       <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
-        {/* Logo / Branding */}
+   
         <div className="flex items-center space-x-4">
           <Link to="/" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Accueil</Link>
           <Link to="/dashboard" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Tableau de bord</Link>
           <Link to="/transactions" className="text-xl font-semibold text-blue-400 hover:text-blue-500">Transactions</Link>
+          <Link to="/wallet" className="text-xl font-semibold text-blue-400 hover:text-blue-500">My Wallet</Link>
         </div>
 
-        {/* User section */}
+
         <div className="flex items-center space-x-4">
           {user ? (
             <>
