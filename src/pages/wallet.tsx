@@ -1,5 +1,9 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import Deposit from '@/features/wallet/deposit'
 import Withdraw from '@/features/wallet/withdraw'
+import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { UserContext } from '@/hook/user-context'
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -19,7 +23,7 @@ interface Wallet {
 }
 
 const Wallet: React.FC = () => {
-  const { user } = useContext(UserContext) || {}
+  const { user, setUser } = useContext(UserContext) || {}
 
   const [wallet, setWallet] = useState<Wallet>({
     balance: { USD: 0, BTC: 0, ETH: 0 },
@@ -38,13 +42,24 @@ const Wallet: React.FC = () => {
       date: new Date().toISOString(),
     }
 
-    setWallet((prevWallet) => ({
-      balance: {
-        ...prevWallet.balance,
-        [currency]: prevWallet.balance[currency] + amount,
-      },
-      transactions: [newTransaction, ...prevWallet.transactions],
-    }))
+    setWallet((prevWallet) => {
+      const updatedWallet = {
+        balance: {
+          ...prevWallet.balance,
+          [currency]: prevWallet.balance[currency] + amount,
+        },
+        transactions: [newTransaction, ...prevWallet.transactions],
+      }
+
+      if (user) {
+        const updatedUser = { ...user, wallet: updatedWallet }
+        localStorage.setItem('user', JSON.stringify(updatedUser))
+        // @ts-expect-error - <type></type>
+        setUser(updatedUser)
+      }
+
+      return updatedWallet
+    })
   }
 
   const handleWithdraw = (amount: number) => {
@@ -116,9 +131,11 @@ const Wallet: React.FC = () => {
           </div>
 
           <h2 className='text-4xl font-bold'>
-            {wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
+            {user.wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
           </h2>
-          <h2 className='font-medium text-zinc-400'>${wallet.balance.USD}</h2>
+          <h2 className='font-medium text-zinc-400'>
+            ${useFormatNumberCrypto(String(user.wallet.balance.USD))}
+          </h2>
           <h2 className='font-medium text-zinc-400'>Today&apos;s PnL + $0.00(0.00%)</h2>
         </article>
       </section>
