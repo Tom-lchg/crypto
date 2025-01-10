@@ -20,6 +20,21 @@ import BlogButton from '@/features/Blog/BlogButton'
 const CryptoDetails: FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
   const [crypto, setCrypto] = useState<Crypto | null>(null)
+  
+const generatePriceData = (basePrice: number, numPoints: number): number[] => {
+  const data = [];
+  let currentPrice = basePrice;
+
+  for (let i = 0; i < numPoints; i++) {
+
+    const variation = (Math.random() - 0.5) * 10;
+    currentPrice = Math.max(currentPrice + variation, 0);
+    data.push(Number(currentPrice.toFixed(2)));
+  }
+
+  return data;
+}; 
+
 
   useEffect(() => {
     async function getCryptoById(id: number) {
@@ -61,9 +76,12 @@ const CryptoDetails: FC = () => {
 
         <CryptoChart
           data={[
-            Number(crypto.percent_change_7d),
-            Number(crypto.percent_change_24h),
-            Number(crypto.percent_change_1h),
+            generatePriceData(Number(crypto.price_usd), 10),
+            generatePriceData(Number(crypto.price_usd), 5),
+            generatePriceData(Number(crypto.price_usd), 20),
+            generatePriceData(Number(crypto.price_usd), 15),
+            generatePriceData(Number(crypto.price_usd), 10),
+            generatePriceData(Number(crypto.price_usd), 25),
           ]}
         />
 

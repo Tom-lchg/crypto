@@ -15,6 +15,7 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [newTitle, setNewTitle] = useState("");
   const [newContent, setNewContent] = useState("");
+  const [sortBy, setSortBy] = useState<"date" | "likes">("date");
 
   useEffect(() => {
     const storedPosts = localStorage.getItem("posts");
@@ -67,12 +68,35 @@ const Blog: React.FC = () => {
     );
   };
 
+  const sortedPosts = [...posts].sort((a, b) => {
+    if (sortBy === "date") {
+      return new Date(b.date).getTime() - new Date(a.date).getTime();
+    } else if (sortBy === "likes") {
+      return b.likes - a.likes;
+    }
+    return 0;
+  });
+  
+
   return (
     <div className="max-w-4xl mx-auto p-6">
+  
+      <div className="flex justify-end mb-4">
+        <label className="mr-2 text-gray-600">Sort by:</label>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as "date" | "likes")}
+          className="border border-gray-300 rounded px-2 py-1"
+        >
+          <option value="date">Date</option>
+          <option value="likes">Likes</option>
+        </select>
+      </div>
+  
       <h1 className="text-3xl font-bold text-center mb-6">
         Discussion about <span className="text-blue-600">{id}</span>
       </h1>
-
+  
       <div className="bg-gray-100 p-6 rounded-lg shadow mb-8">
         <h2 className="text-2xl font-semibold mb-4">Create a New Post</h2>
         <input
@@ -95,13 +119,13 @@ const Blog: React.FC = () => {
           Post
         </button>
       </div>
-
+  
       <div>
         <h2 className="text-2xl font-semibold mb-4">Posts</h2>
-        {posts.length === 0 ? (
+        {sortedPosts.length === 0 ? (
           <p className="text-gray-500">No posts yet!</p>
         ) : (
-          posts.map((post) => (
+          sortedPosts.map((post) => (
             <div
               key={post.id}
               className="bg-white p-6 mb-4 rounded-lg shadow"
@@ -143,7 +167,6 @@ const Blog: React.FC = () => {
         )}
       </div>
     </div>
-  );
-};
-
+  );  
+}
 export default Blog;
