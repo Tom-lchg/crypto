@@ -14,7 +14,7 @@ import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { getCrypto } from '@/lib/coin-lore'
 import { Crypto } from '@/types/crypto'
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import CryptoPriceHistory from './crypto-price-history'
 
 const CryptoDetails: FC = () => {

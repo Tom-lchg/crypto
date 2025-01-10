@@ -41,7 +41,6 @@ const LoginForm: FC = () => {
             />
           </div>
 
-          {/* Password Field */}
           <div>
             <label htmlFor='password' className='block text-sm font-medium'>
               Mot de passe
@@ -56,7 +55,7 @@ const LoginForm: FC = () => {
             />
           </div>
 
-          {/* Submit Button */}
+         
           <button
             type='submit'
             className='w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-all'

@@ -1,13 +1,10 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-
 import Deposit from '@/features/wallet/deposit'
 import Withdraw from '@/features/wallet/withdraw'
-import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { UserContext } from '@/hook/user-context'
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
 
-export interface Transaction {
+interface Transaction {
   id: number
   type: 'deposit' | 'withdrawal'
   amount: number
@@ -22,17 +19,39 @@ interface Wallet {
 }
 
 const Wallet: React.FC = () => {
-  const { user, setUser } = useContext(UserContext) || {}
-
-  const [, setWallet] = useState<Wallet>({
+  const { user } = useContext(UserContext) || {}
+  const [wallet, setWallet] = useState<Wallet>({
     balance: { USD: 0, BTC: 0, ETH: 0 },
     transactions: [],
   })
-
+  const [amount, setAmount] = useState<number>(0)
   const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD')
-  const [address, setAddress] = useState('')
+  const [address, setAddress] = useState<string>('')
+  const navigate = useNavigate()
+
+  // Récupérer le portefeuille du localStorage
+  useEffect(() => {
+    const savedWallet = localStorage.getItem('wallet')
+    if (savedWallet) {
+      setWallet(JSON.parse(savedWallet))
+    }
+  }, [])
+
+  useEffect(() => {
+    // Sauvegarder le portefeuille dans le localStorage après chaque modification
+    localStorage.setItem('wallet', JSON.stringify(wallet))
+  }, [wallet])
+
+  useEffect(() => {
+    if (!user) navigate('/login')
+  }, [navigate, user])
 
   const handleDeposit = (amount: number) => {
+    if (isNaN(amount) || amount <= 0) {
+      alert('Please enter a valid amount.')
+      return
+    }
+
     const newTransaction: Transaction = {
       id: Date.now(),
       type: 'deposit',
@@ -41,27 +60,25 @@ const Wallet: React.FC = () => {
       date: new Date().toISOString(),
     }
 
-    setWallet((prevWallet) => {
-      const updatedWallet = {
-        balance: {
-          ...prevWallet.balance,
-          [currency]: prevWallet.balance[currency] + amount,
-        },
-        transactions: [newTransaction, ...prevWallet.transactions],
-      }
+    // Mise à jour du portefeuille avec le nouveau solde
+    setWallet((prevWallet) => ({
+      balance: {
+        ...prevWallet.balance,
+        [currency]: prevWallet.balance[currency] + amount,
+      },
+      transactions: [newTransaction, ...prevWallet.transactions],
+    }))
 
-      if (user) {
-        const updatedUser = { ...user, wallet: updatedWallet }
-        localStorage.setItem('user', JSON.stringify(updatedUser))
-        // @ts-expect-error - <type></type>
-        setUser(updatedUser)
-      }
-
-      return updatedWallet
-    })
+    setAmount(0)
+    alert('Deposit successful!')
   }
 
-  const handleWithdraw = (amount: number) => {
+  const handleWithdraw = (amount: number, address: string) => {
+    if (isNaN(amount) || amount <= 0 || amount > wallet.balance[currency]) {
+      alert('Please enter a valid amount to withdraw or check your balance.')
+      return
+    }
+
     const newTransaction: Transaction = {
       id: Date.now(),
       type: 'withdrawal',
@@ -79,16 +96,12 @@ const Wallet: React.FC = () => {
       transactions: [newTransaction, ...prevWallet.transactions],
     }))
 
+    setAmount(0)
     setAddress('')
+    alert('Withdrawal successful!')
   }
 
-  // on peut accéder à wallet uniquement si on est connecté
-  const navigate = useNavigate()
-  useEffect(() => {
-    if (user === null || user === undefined) navigate('/login')
-  }, [navigate, user])
-
-  if (user === undefined || user === null) return <>login</>
+  if (!user) return <>Login</>
 
   return (
     <main className='max-w-7xl mx-auto mt-24'>
@@ -130,12 +143,10 @@ const Wallet: React.FC = () => {
           </div>
 
           <h2 className='text-4xl font-bold'>
-            {user.wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
+            {wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
           </h2>
-          <h2 className='font-medium text-zinc-400'>
-            ${useFormatNumberCrypto(String(user.wallet.balance.USD))}
-          </h2>
-          <h2 className='font-medium text-zinc-400'>Today&apos;s PnL + $0.00(0.00%)</h2>
+          <h2 className='font-medium text-zinc-400'>${wallet.balance.USD}</h2>
+          <h2 className='font-medium text-zinc-400'>Today's PnL + $0.00(0.00%)</h2>
         </article>
       </section>
     </main>

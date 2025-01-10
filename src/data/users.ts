@@ -1,4 +1,6 @@
-import { User } from '@/types/user'
+
+
+import { User } from '@/types/user';
 
 export const users: Array<User> = [
   {
@@ -49,4 +51,4 @@ export const users: Array<User> = [
       transaction: [],
     },
   },
-]
+];
