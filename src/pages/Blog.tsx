@@ -1,9 +1,10 @@
 import BlogCard from '@/components/blog/blog-card'
 import DialogMsg from '@/components/blog/blog-msg'
+import { UserContext } from '@/hook/user-context'
 import { getCrypto } from '@/lib/coin-lore'
 import { Crypto } from '@/types/crypto'
-import React, { useEffect, useState } from 'react'
-import { useParams } from 'react-router'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router'
 
 interface Post {
   id: string
@@ -19,6 +20,8 @@ const Blog: React.FC = () => {
   const [posts, setPosts] = useState<Post[]>([])
   const [newTitle, setNewTitle] = useState('')
   const [newContent, setNewContent] = useState('')
+
+  const { user } = useContext(UserContext)!
 
   const [crypto, setCrypto] = useState<Crypto | null>(null)
 
@@ -83,7 +86,13 @@ const Blog: React.FC = () => {
     )
   }
 
-  console.log(crypto)
+  // on peut accéder à wallet uniquement si on est connecté
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (user === null || user === undefined) navigate('/login')
+  }, [navigate, user])
+
+  if (user === undefined || user === null) return <>login</>
 
   if (!crypto) return <div>Loading...</div>
 
@@ -91,10 +100,30 @@ const Blog: React.FC = () => {
     <section className='max-w-7xl mt-24 mx-auto'>
       <article className='flex items-start justify-between'>
         <h2 className='text-5xl font-medium'>{crypto.name} Blog</h2>
-        <DialogMsg />
+        <DialogMsg
+          setNewContent={setNewContent}
+          handleClickPost={handlePost}
+          setNewTitle={setNewTitle}
+        />
       </article>
-      <article className='mt-8'>
-        <BlogCard user={{ pseudo: '', avatar: '' }} message='Hello' />
+      <article className='mt-8 space-y-4'>
+        {posts.map((post, key) => (
+          <BlogCard
+            key={key}
+            user={{ pseudo: user.pseudo, avatar: user.avatar }}
+            message={post.content}
+            handleLike={handleLike}
+            handleDelete={handleDelete}
+            postId={post.id}
+            handleEdit={handleEdit}
+            currentPost={{
+              message: post.content,
+              title: post.title,
+              date: post.date,
+              like: post.likes,
+            }}
+          />
+        ))}
       </article>
     </section>
   )
