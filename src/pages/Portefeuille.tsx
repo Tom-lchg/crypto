@@ -1,7 +1,9 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { UserContext } from '@/hook/user-context'
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 interface Transaction {
   id: number
@@ -45,6 +47,12 @@ const Portefeuille: React.FC = () => {
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({})
   const [cryptos, setCryptos] = useState<string[]>([])
   const [limitPrices, setLimitPrices] = useState<{ [key: string]: number }>({})
+  const { user } = useContext(UserContext) || {}
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!user) navigate('/login')
+  }, [navigate, user])
 
   useEffect(() => {
     const loadPricesAndCryptos = async () => {
