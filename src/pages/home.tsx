@@ -14,7 +14,7 @@ import { useFormatNumber } from '@/hook/use-convert-number'
 import { useIsNegative } from '@/hook/use-is-negative'
 import { getCryptos, getHotCoins, getTopGainerCoin, getTopVolumeCoin } from '@/lib/coin-lore'
 import { Cryptos } from '@/types/cryptos'
-import { GitPullRequestCreate, Info } from 'lucide-react'
+import { Info } from 'lucide-react'
 import { FC, JSX, useEffect, useState } from 'react'
 import { Link } from 'react-router'
 
@@ -97,18 +97,6 @@ const Home: FC = (): JSX.Element => {
                     </TooltipTrigger>
                     <TooltipContent>
                       <p>Details</p>
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
-                <TooltipProvider>
-                  <Tooltip delayDuration={200}>
-                    <TooltipTrigger>
-                      <Link to={`/traide/${crypto.id}`}>
-                        <GitPullRequestCreate size={20} />
-                      </Link>
-                    </TooltipTrigger>
-                    <TooltipContent>
-                      <p>Traide</p>
                     </TooltipContent>
                   </Tooltip>
                 </TooltipProvider>

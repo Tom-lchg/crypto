@@ -1,4 +1,3 @@
-import { Cryptos } from '@/types/cryptos'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -47,7 +46,7 @@ const Portefeuille: React.FC = () => {
     transactions: [],
   })
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({})
-  const [cryptos, setCryptos] = useState<Cryptos[]>([])
+  const [cryptos, setCryptos] = useState<any[]>([])
 
   useEffect(() => {
     const loadPricesAndCryptos = async () => {
@@ -124,9 +123,9 @@ const Portefeuille: React.FC = () => {
       <h1>Virtual Wallet</h1>
       <h2>Balances:</h2>
       <ul>
-        {cryptos.map((cryptoSymbol, key) => (
+        {cryptos.map((cryptoSymbol) => (
           <li
-            key={key}
+            key={cryptoSymbol}
             style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}
           >
             {cryptoImages[cryptoSymbol] && (
