@@ -5,6 +5,7 @@ import '@/styles/index.css'
 import { createRoot } from 'react-dom/client'
 import { Route, BrowserRouter as Router, Routes } from 'react-router'
 import Nav from './components/nav'
+import { Toaster } from './components/ui/toaster'
 import LoginForm from './components/User/LoginForm'
 import { UserProvider } from './hook/user-context'
 import Blog from './pages/Blog'
@@ -35,4 +36,9 @@ const Main = () => {
   )
 }
 
-root.render(<Main />)
+root.render(
+  <>
+    <Main />
+    <Toaster />
+  </>
+)

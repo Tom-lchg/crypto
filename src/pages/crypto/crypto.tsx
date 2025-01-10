@@ -97,10 +97,6 @@ const CryptoDetails: FC = () => {
           <h2 className='text-xl font-medium'>{crypto.symbol} Price History USD</h2>
           <CryptoPriceHistory crypto={crypto} />
         </section>
-
-        <section className='space-y-6'>
-          <h2 className='text-xl font-medium'>{crypto.symbol} Market Information</h2>
-        </section>
       </article>
 
       <article className='space-y-6'>
