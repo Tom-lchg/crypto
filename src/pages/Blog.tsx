@@ -102,7 +102,6 @@ const Blog: React.FC = () => {
   if (!crypto) return <div>Loading...</div>
 
   const sorting = (value: string) => {
-    console.log(value)
     let sortedPosts = [...posts]
 
     switch (value) {
@@ -128,8 +127,6 @@ const Blog: React.FC = () => {
   }
 
   if (!crypto) return <div>Loading...</div>
-
-  console.log(posts)
 
   return (
     <section className='max-w-7xl mt-24 mx-auto space-y-6'>
