@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
+import { useToast } from '@/hook/use-toast'
 import { UserContext } from '@/hook/user-context'
 import axios from 'axios'
 import React, { useContext, useEffect, useState } from 'react'
@@ -49,6 +50,7 @@ const Portefeuille: React.FC = () => {
   const [limitPrices, setLimitPrices] = useState<{ [key: string]: number }>({})
   const { user } = useContext(UserContext) || {}
   const navigate = useNavigate()
+  const { toast } = useToast()
 
   useEffect(() => {
     if (!user) navigate('/login')
@@ -121,6 +123,10 @@ const Portefeuille: React.FC = () => {
       },
       transactions: [newTransaction, ...prevWallet.transactions],
     }))
+
+    toast({
+      title: `Achat effectué`,
+    })
   }
 
   const handleLimitPriceChange = (currency: string, value: string) => {

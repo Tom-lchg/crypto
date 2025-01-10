@@ -7,6 +7,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { useToast } from '@/hook/use-toast'
 import { UserContext } from '@/hook/user-context'
 import { getCrypto } from '@/lib/coin-lore'
 import { Crypto } from '@/types/crypto'
@@ -29,6 +30,7 @@ const Blog: React.FC = () => {
   const [crypto, setCrypto] = useState<Crypto | null>(null)
   const [newContent, setNewContent] = useState('')
   const { user } = useContext(UserContext)!
+  const { toast } = useToast()
 
   useEffect(() => {
     const storedPosts = localStorage.getItem('posts')
@@ -73,10 +75,18 @@ const Blog: React.FC = () => {
       setNewTitle('')
       setNewContent('')
     }
+
+    toast({
+      title: `Message envoyé`,
+    })
   }
 
   const handleDelete = (postId: string) => {
     setPosts(posts.filter((post) => post.id !== postId))
+    toast({
+      title: `Message supprimé`,
+      variant: 'destructive',
+    })
   }
 
   const handleLike = (postId: string) => {
@@ -89,6 +99,9 @@ const Blog: React.FC = () => {
         post.id === postId ? { ...post, title: newTitle, content: newContent } : post
       )
     )
+    toast({
+      title: `Message modifié`,
+    })
   }
 
   // on peut accéder à wallet uniquement si on est connecté
