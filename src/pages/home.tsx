@@ -1,5 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import MarketOverviewCard from '@/components/market-overview-card'
 import {
   Table,
   TableBody,
@@ -11,7 +12,7 @@ import {
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { useFormatNumber } from '@/hook/use-convert-number'
 import { useIsNegative } from '@/hook/use-is-negative'
-import { getCryptos } from '@/lib/coin-lore'
+import { getCryptos, getHotCoins, getTopGainerCoin, getTopVolumeCoin } from '@/lib/coin-lore'
 import { Cryptos } from '@/types/cryptos'
 import { GitPullRequestCreate, Info } from 'lucide-react'
 import { FC, JSX, useEffect, useState } from 'react'
@@ -19,23 +20,45 @@ import { Link } from 'react-router'
 
 const Home: FC = (): JSX.Element => {
   const [cryptos, setCryptos] = useState<Array<Cryptos>>()
+  const [hotCoins, setHotCoins] = useState<Array<Cryptos>>()
+  const [topGainerCoin, setTopGainerCoin] = useState<Array<Cryptos>>()
+  const [topVolumeCoin, setTopVolumeCoin] = useState<Array<Cryptos>>()
 
   useEffect(() => {
     async function fetchCryptos() {
-      const response = await getCryptos()
-      if (response === undefined) return []
-      setCryptos(response)
+      try {
+        const [crypto, hotCoins, topGainerCoin, topVolumeCoin] = await Promise.all([
+          getCryptos(),
+          getHotCoins(),
+          getTopGainerCoin(),
+          getTopVolumeCoin(),
+        ])
+
+        if (crypto) setCryptos(crypto)
+        if (hotCoins) setHotCoins(hotCoins)
+        if (topGainerCoin) setTopGainerCoin(topGainerCoin)
+        if (topVolumeCoin) setTopVolumeCoin(topVolumeCoin)
+      } catch (error) {
+        console.error('Failed to fetch cryptos:', error)
+      }
     }
+
     fetchCryptos()
   }, [])
 
-  console.log(cryptos)
-
   // dans le cas ou le fetch prend du temps
-  if (!cryptos) return <div>Loading...</div>
+  if (!cryptos || !hotCoins || !topGainerCoin || !topVolumeCoin) return <div>Loading...</div>
 
   return (
-    <main className='max-w-7xl mx-auto mt-14'>
+    <main className='max-w-7xl mx-auto mt-24 space-y-8'>
+      <h1 className='text-4xl font-medium'>Markets Overview</h1>
+
+      <section className='flex items-center gap-4'>
+        <MarketOverviewCard title='Hot Coins' cryptos={hotCoins} />
+        <MarketOverviewCard title='Top Gainer Coin' cryptos={topGainerCoin} />
+        <MarketOverviewCard title='Top Volume Coin' cryptos={topVolumeCoin} />
+      </section>
+
       <Table>
         <TableHeader>
           <TableRow className='text-xs'>
@@ -68,7 +91,7 @@ const Home: FC = (): JSX.Element => {
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
                     <TooltipTrigger>
-                      <Link to={`/details/${crypto.nameid}`}>
+                      <Link to={`/details/${crypto.id}`}>
                         <Info size={20} />
                       </Link>
                     </TooltipTrigger>
@@ -80,7 +103,7 @@ const Home: FC = (): JSX.Element => {
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
                     <TooltipTrigger>
-                      <Link to={`/traide/${crypto.nameid}`}>
+                      <Link to={`/traide/${crypto.id}`}>
                         <GitPullRequestCreate size={20} />
                       </Link>
                     </TooltipTrigger>

@@ -9,3 +9,11 @@ export function useFormatNumber(value: number): string {
     return value.toFixed(2)
   }
 }
+
+export function useFormatNumberCrypto(value: string): string {
+  const number = parseFloat(value)
+  if (isNaN(number)) {
+    return value
+  }
+  return number.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })
+}
