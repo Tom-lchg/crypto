@@ -19,11 +19,10 @@ const Blog: React.FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
   const [posts, setPosts] = useState<Post[]>([])
   const [newTitle, setNewTitle] = useState('')
-  const [newContent, setNewContent] = useState('')
-
-  const { user } = useContext(UserContext)!
-
   const [crypto, setCrypto] = useState<Crypto | null>(null)
+  const [newContent, setNewContent] = useState('')
+  const [sortBy] = useState<'date' | 'likes'>('date')
+  const { user } = useContext(UserContext)!
 
   useEffect(() => {
     const storedPosts = localStorage.getItem('posts')
@@ -95,6 +94,19 @@ const Blog: React.FC = () => {
   if (user === undefined || user === null) return <>login</>
 
   if (!crypto) return <div>Loading...</div>
+
+  const sortedPosts = [...posts].sort((a, b) => {
+    if (sortBy === 'date') {
+      return new Date(b.date).getTime() - new Date(a.date).getTime()
+    } else if (sortBy === 'likes') {
+      return b.likes - a.likes
+    }
+    return 0
+  })
+
+  if (!crypto) return <div>Loading...</div>
+
+  console.log(crypto)
 
   return (
     <section className='max-w-7xl mt-24 mx-auto'>

@@ -18,7 +18,7 @@ interface CryptoChartProps {
 }
 
 const CryptoChart: React.FC<CryptoChartProps> = ({ data }) => {
-  const labels = ['7 days', '24h', '1h']
+  const labels = Array.from({ length: 6 }, (_, i) => `${i}:00`);
 
   const chartData = {
     labels,
@@ -27,6 +27,7 @@ const CryptoChart: React.FC<CryptoChartProps> = ({ data }) => {
         label: 'Prix de la cryptomonnaie',
         data,
         borderColor: 'rgba(75, 192, 192, 1)',
+        tension: 0.10,
         borderWidth: 2,
         fill: false,
       },
