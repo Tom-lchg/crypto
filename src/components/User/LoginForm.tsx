@@ -22,19 +22,11 @@ const LoginForm: FC = () => {
   const { handleLogin } = userContext
 
   return (
-<<<<<<< HEAD
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-sm w-full">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Connexion</h2>
-        <form onSubmit={handleSubmit} className="space-y-4">
-        
-=======
     <div className='flex items-center justify-center mt-24'>
       <div className='border rounded-md p-8 max-w-sm w-full'>
         <h2 className='text-4xl font-bold mb-6'>Connexion</h2>
         <form onSubmit={handleSubmit} className='space-y-4'>
           {/* Username Field */}
->>>>>>> 7651748ce7ba4360c33815725e7e3d6af48cdb64
           <div>
             <label htmlFor='username' className='block text-sm font-medium'>
               Nom d'utilisateur

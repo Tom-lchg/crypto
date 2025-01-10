@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 
 interface Transaction {
   id: number;
@@ -14,14 +15,23 @@ interface Wallet {
 }
 
 const fetchCryptoPrices = async () => {
+  try {
  
-  return {
-    ETH: 1600,
-    USDT: 1,
-    XRP: 0.5,
-    BNB: 300,
-    SOL: 20,
-  };
+    const response = await axios.get('https://api.coinlore.net/api/tickers/', {
+      params: {
+        limit: 100, 
+      },
+    });
+
+   
+    return response.data.data.reduce((acc: { [key: string]: number }, crypto: any) => {
+      acc[crypto.symbol] = parseFloat(crypto.price_usd);
+      return acc;
+    }, {});
+  } catch (error) {
+    console.error('Error fetching crypto prices:', error);
+    return {};
+  }
 };
 
 const cryptoImages: { [key: string]: string } = {
@@ -30,36 +40,44 @@ const cryptoImages: { [key: string]: string } = {
   XRP: '/src/assets/xrp.png',
   BNB: '/src/assets/bnb.png',
   SOL: '/src/assets/sol.png',
+ 
 };
 
 const Portefeuille: React.FC = () => {
   const [wallet, setWallet] = useState<Wallet>({
-    balance: { USD: 1000, ETH: 1.2, USDT: 500, XRP: 2000, BNB: 3, SOL: 10 },
-    transactions: [
-      {
-        id: 1,
-        date: new Date().toISOString(),
-        orderType: 'market',
-        amount: 1.5,
-        price: 1600,
-      },
-      {
-        id: 2,
-        date: new Date().toISOString(),
-        orderType: 'limit',
-        amount: 2,
-        price: 300,
-      },
-    ],
+    balance: {},
+    transactions: [],
   });
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({});
+  const [cryptos, setCryptos] = useState<any[]>([]); 
 
   useEffect(() => {
-    const loadPrices = async () => {
-      const prices = await fetchCryptoPrices();
-      setCryptoPrices(prices);
+    const loadPricesAndCryptos = async () => {
+      try {
+        const prices = await fetchCryptoPrices();
+        setCryptoPrices(prices);
+
+      
+        const initialBalance: { [key: string]: number } = {};
+        Object.keys(prices).forEach((symbol) => {
+          initialBalance[symbol] = Math.random() * 10; 
+        });
+
+        setWallet((prevWallet) => ({
+          balance: {
+            ...initialBalance,
+            USD: 1000, 
+          },
+          transactions: prevWallet.transactions,
+        }));
+
+        setCryptos(Object.keys(prices)); 
+      } catch (error) {
+        console.error('Error fetching data:', error);
+      }
     };
-    loadPrices();
+
+    loadPricesAndCryptos();
   }, []);
 
   const calculateTotalValue = () => {
@@ -71,7 +89,7 @@ const Portefeuille: React.FC = () => {
     return wallet.balance.USD + cryptoValue;
   };
 
-  const handleBuyCrypto = (currency: string) => {
+  const handleBuyCrypto = (currency: string, orderType: 'market' | 'limit') => {
     if (!cryptoPrices[currency]) {
       alert('Crypto price not available.');
       return;
@@ -84,6 +102,13 @@ const Portefeuille: React.FC = () => {
     }
 
     const cryptoAmount = usdAmount / cryptoPrices[currency];
+    const newTransaction: Transaction = {
+      id: Date.now(),
+      date: new Date().toISOString(),
+      orderType,
+      amount: cryptoAmount,
+      price: cryptoPrices[currency],
+    };
 
     setWallet((prevWallet) => ({
       balance: {
@@ -91,36 +116,38 @@ const Portefeuille: React.FC = () => {
         USD: prevWallet.balance.USD - usdAmount,
         [currency]: (prevWallet.balance[currency] || 0) + cryptoAmount,
       },
-      transactions: [
-        ...prevWallet.transactions,
-        {
-          id: Date.now(),
-          date: new Date().toISOString(),
-          orderType: 'market',
-          amount: cryptoAmount,
-          price: cryptoPrices[currency],
-        },
-      ],
+      transactions: [...prevWallet.transactions, newTransaction],
     }));
   };
+
+  if (!cryptoPrices || cryptos.length === 0) return <div>Loading...</div>;
 
   return (
     <div style={{ padding: '20px', fontFamily: 'Arial, sans-serif' }}>
       <h1>Virtual Wallet</h1>
       <h2>Balances:</h2>
       <ul>
-        {Object.entries(wallet.balance).map(([curr, bal]) => (
-          <li key={curr} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
-            {cryptoImages[curr] && <img src={cryptoImages[curr]} alt={curr} style={{ width: '30px', height: '30px', marginRight: '10px' }} />}
-            {curr}: {bal.toFixed(8)} {curr !== 'USD' && cryptoPrices[curr] ? `($${(bal * cryptoPrices[curr]).toFixed(2)})` : ''}
-            {curr !== 'USD' && (
-              <button style={{ marginLeft: '10px' }} onClick={() => handleBuyCrypto(curr)}>
-                Buy {curr}
-              </button>
+        {cryptos.map((cryptoSymbol) => (
+          <li key={cryptoSymbol} style={{ display: 'flex', alignItems: 'center', marginBottom: '10px' }}>
+            {cryptoImages[cryptoSymbol] && (
+              <img src={cryptoImages[cryptoSymbol]} alt={cryptoSymbol} style={{ width: '30px', height: '30px', marginRight: '10px' }} />
+            )}
+            {cryptoSymbol}: {wallet.balance[cryptoSymbol]?.toFixed(8) || 0} 
+            {cryptoPrices[cryptoSymbol] && `($${(wallet.balance[cryptoSymbol] * cryptoPrices[cryptoSymbol]).toFixed(2)})`}
+            {cryptoSymbol !== 'USD' && (
+              <div>
+                <button style={{ marginLeft: '10px' }} onClick={() => handleBuyCrypto(cryptoSymbol, 'market')}>
+                  Buy {cryptoSymbol} (Market Order)
+                </button>
+                <button style={{ marginLeft: '10px' }} onClick={() => handleBuyCrypto(cryptoSymbol, 'limit')}>
+                  Buy {cryptoSymbol} (Limit Order)
+                </button>
+              </div>
             )}
           </li>
         ))}
       </ul>
+
       <h3>Total Portfolio Value: ${calculateTotalValue().toFixed(2)}</h3>
 
       <h3>Transaction History</h3>
@@ -136,3 +163,4 @@ const Portefeuille: React.FC = () => {
 };
 
 export default Portefeuille;
+
