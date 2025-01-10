@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import UserMessage from '@/components/User/user-message'
+import BlogButton from '@/features/Blog/BlogButton'
 import BuyCrypto from '@/features/crypto/buy'
 import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { getCrypto } from '@/lib/coin-lore'
@@ -15,7 +16,6 @@ import { Crypto } from '@/types/crypto'
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import CryptoPriceHistory from './crypto-price-history'
-import BlogButton from '@/features/Blog/blogButton'
 
 const CryptoDetails: FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
@@ -93,10 +93,6 @@ const CryptoDetails: FC = () => {
         </section>
 
         <section className='border rounded-xl p-6 w-full'>
-          <BlogButton crypto={{id: cryptoId!, name : crypto.name}}/>
-        </section>
-
-        <section className='border rounded-xl p-6 w-full'>
           <h2 className='text-2xl font-medium mb-4'>Square</h2>
           <article>
             <UserMessage
@@ -108,6 +104,10 @@ const CryptoDetails: FC = () => {
               }}
             />
           </article>
+        </section>
+
+        <section className='border rounded-xl p-6 w-full'>
+          <BlogButton crypto={{ id: cryptoId!, name: crypto.name }} />
         </section>
       </article>
     </section>
