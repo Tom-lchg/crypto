@@ -41,6 +41,7 @@ const Portefeuille: React.FC = () => {
   const [wallet, setWallet] = useState<Wallet>({ balance: {}, transactions: [] });
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({});
   const [cryptos, setCryptos] = useState<string[]>([]);
+  const [limitPrices, setLimitPrices] = useState<{ [key: string]: number }>({});
 
   useEffect(() => {
     const loadPricesAndCryptos = async () => {
@@ -87,13 +88,18 @@ const Portefeuille: React.FC = () => {
       return;
     }
 
-    const cryptoAmount = usdAmount / cryptoPrices[currency];
+    let price = cryptoPrices[currency];
+    if (orderType === 'limit' && limitPrices[currency]) {
+      price = limitPrices[currency]; // Use the user-specified price for limit orders
+    }
+
+    const cryptoAmount = usdAmount / price;
     const newTransaction: Transaction = {
       id: Date.now(),
       date: new Date().toISOString(),
       orderType,
       amount: cryptoAmount,
-      price: cryptoPrices[currency],
+      price,
     };
 
     setWallet((prevWallet) => ({
@@ -104,6 +110,16 @@ const Portefeuille: React.FC = () => {
       },
       transactions: [newTransaction, ...prevWallet.transactions],
     }));
+  };
+
+  const handleLimitPriceChange = (currency: string, value: string) => {
+    const price = parseFloat(value);
+    if (!isNaN(price)) {
+      setLimitPrices((prev) => ({
+        ...prev,
+        [currency]: price,
+      }));
+    }
   };
 
   if (!cryptoPrices || cryptos.length === 0) return <div>Loading...</div>;
@@ -150,12 +166,20 @@ const Portefeuille: React.FC = () => {
                 >
                   Buy (Market)
                 </button>
-                <button
-                  onClick={() => handleBuyCrypto(cryptoSymbol, 'limit')}
-                  className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600"
-                >
-                  Buy (Limit)
-                </button>
+                <div className="flex items-center space-x-2">
+                  <input
+                    type="number"
+                    placeholder="Limit price"
+                    onChange={(e) => handleLimitPriceChange(cryptoSymbol, e.target.value)}
+                    className="px-3 py-1 border rounded-md"
+                  />
+                  <button
+                    onClick={() => handleBuyCrypto(cryptoSymbol, 'limit')}
+                    className="px-4 py-2 bg-green-500 text-white text-sm font-medium rounded-lg hover:bg-green-600"
+                  >
+                    Buy (Limit)
+                  </button>
+                </div>
               </div>
             </li>
           ))}
