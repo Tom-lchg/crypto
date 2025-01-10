@@ -8,33 +8,31 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import UserMessage from '@/components/User/user-message'
+import BlogButton from '@/features/Blog/BlogButton'
 import BuyCrypto from '@/features/crypto/buy'
 import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { getCrypto } from '@/lib/coin-lore'
 import { Crypto } from '@/types/crypto'
 import { FC, useEffect, useState } from 'react'
-import { useParams } from 'react-router-dom'
+import { useParams } from 'react-router'
 import CryptoPriceHistory from './crypto-price-history'
-import BlogButton from '@/features/Blog/BlogButton'
 
 const CryptoDetails: FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
   const [crypto, setCrypto] = useState<Crypto | null>(null)
-  
-const generatePriceData = (basePrice: number, numPoints: number): number[] => {
-  const data = [];
-  let currentPrice = basePrice;
 
-  for (let i = 0; i < numPoints; i++) {
+  const generatePriceData = (basePrice: number, numPoints: number): number[] => {
+    const data = []
+    let currentPrice = basePrice
 
-    const variation = (Math.random() - 0.5) * 10;
-    currentPrice = Math.max(currentPrice + variation, 0);
-    data.push(Number(currentPrice.toFixed(2)));
+    for (let i = 0; i < numPoints; i++) {
+      const variation = (Math.random() - 0.5) * 10
+      currentPrice = Math.max(currentPrice + variation, 0)
+      data.push(Number(currentPrice.toFixed(2)))
+    }
+
+    return data
   }
-
-  return data;
-}; 
-
 
   useEffect(() => {
     async function getCryptoById(id: number) {
@@ -76,12 +74,12 @@ const generatePriceData = (basePrice: number, numPoints: number): number[] => {
 
         <CryptoChart
           data={[
-            generatePriceData(Number(crypto.price_usd), 10),
-            generatePriceData(Number(crypto.price_usd), 5),
-            generatePriceData(Number(crypto.price_usd), 20),
-            generatePriceData(Number(crypto.price_usd), 15),
-            generatePriceData(Number(crypto.price_usd), 10),
-            generatePriceData(Number(crypto.price_usd), 25),
+            generatePriceData(Number(crypto.price_usd), 10)[0],
+            generatePriceData(Number(crypto.price_usd), 5)[0],
+            generatePriceData(Number(crypto.price_usd), 20)[0],
+            generatePriceData(Number(crypto.price_usd), 15)[0],
+            generatePriceData(Number(crypto.price_usd), 10)[0],
+            generatePriceData(Number(crypto.price_usd), 25)[0],
           ]}
         />
 
@@ -111,10 +109,6 @@ const generatePriceData = (basePrice: number, numPoints: number): number[] => {
         </section>
 
         <section className='border rounded-xl p-6 w-full'>
-          <BlogButton crypto={{id: cryptoId!, name : crypto.name}}/>
-        </section>
-
-        <section className='border rounded-xl p-6 w-full'>
           <h2 className='text-2xl font-medium mb-4'>Square</h2>
           <article>
             <UserMessage
@@ -126,6 +120,10 @@ const generatePriceData = (basePrice: number, numPoints: number): number[] => {
               }}
             />
           </article>
+        </section>
+
+        <section className='border rounded-xl p-6 w-full'>
+          <BlogButton crypto={{ id: cryptoId!, name: crypto.name }} />
         </section>
       </article>
     </section>
