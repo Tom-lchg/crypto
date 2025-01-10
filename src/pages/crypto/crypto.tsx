@@ -44,8 +44,8 @@ const CryptoDetails: FC = () => {
               {crypto.name} Price ({crypto.symbol})
             </h1>
             <h3 className='text-lg font-medium'>
-              BTC to <span className='text-green-400'>USD</span>: 1 Bitcoin equals ${' '}
-              {useFormatNumberCrypto(crypto.price_usd)} USD{' '}
+              {crypto.symbol} to <span className='text-green-400'>USD</span>: 1 {crypto.name} equals
+              $ {useFormatNumberCrypto(crypto.price_usd)} USD{' '}
               <span className='text-green-400'>+0.31%</span>
             </h3>
           </div>
@@ -59,14 +59,21 @@ const CryptoDetails: FC = () => {
           </Select>
         </section>
 
-        <CryptoChart data={[1, 2, 3, 2, 1, 4, 1]} />
+        <CryptoChart
+          data={[
+            Number(crypto.percent_change_7d),
+            Number(crypto.percent_change_24h),
+            Number(crypto.percent_change_1h),
+          ]}
+        />
 
         <section className='space-y-6'>
           <h2 className='text-4xl font-medium'>Price of {crypto.symbol} today</h2>
           <p className='text-zinc-400'>
-            The live price of Bitcoin is $ 93,791.45 per (BTC / USD) with a current market cap of $
-            1,857.80B USD. 24-hour trading volume is $ 61.65B USD. BTC to USD price is updated in
-            real-time. Bitcoin is +0.31% in the last 24 hours with a circulating supply of 19.81M.
+            The live price of Bitcoin is $ 93,791.45 per ({crypto.symbol} / USD) with a current
+            market cap of $ 1,857.80B USD. 24-hour trading volume is $ 61.65B USD. BTC to USD price
+            is updated in real-time. Bitcoin is +0.31% in the last 24 hours with a circulating
+            supply of 19.81M.
           </p>
         </section>
 

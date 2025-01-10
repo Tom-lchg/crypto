@@ -1,7 +1,8 @@
 import Deposit from '@/features/wallet/deposit'
 import Withdraw from '@/features/wallet/withdraw'
 import { UserContext } from '@/hook/user-context'
-import React, { useContext, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 export interface Transaction {
   id: number
@@ -67,23 +68,29 @@ const Wallet: React.FC = () => {
     setAddress('')
   }
 
+  // on peut accéder à wallet uniquement si on est connecté
+  const navigate = useNavigate()
+  useEffect(() => {
+    if (user === null || user === undefined) navigate('/login')
+  }, [navigate, user])
+
+  if (user === undefined || user === null) return <>login</>
+
   return (
     <main className='max-w-7xl mx-auto mt-24'>
       <section className='space-y-6'>
         <section className='flex gap-8 justify-between'>
           <article className='flex gap-4'>
             <img
-              src={user?.avatar}
+              src={user.avatar}
               alt=''
               className='w-36 object-cover rounded-full h-36 border border-zinc-100'
             />
-            <h2 className='text-xl font-medium'>
-              {user?.pseudo ? user.pseudo : 'user disconnected'}
-            </h2>
+            <h2 className='text-xl font-medium'>{user.pseudo}</h2>
           </article>
           <article>
             <h2 className='text-zinc-400'>UID</h2>
-            <h2>275287</h2>
+            <h2>{user.id}</h2>
           </article>
           <article>
             <h2 className='text-zinc-400'>VIP Level</h2>
