@@ -3,6 +3,7 @@ import { useParams } from "react-router";
 
 interface Post {
   id: string;
+  discussionId: string;
   title: string;
   content: string;
   date: string;
@@ -18,18 +19,23 @@ const Blog: React.FC = () => {
   useEffect(() => {
     const storedPosts = localStorage.getItem("posts");
     if (storedPosts) {
-      setPosts(JSON.parse(storedPosts));
+      const allPosts = JSON.parse(storedPosts) as Post[];
+      setPosts(allPosts.filter((post) => post.discussionId === id));
     }
-  }, []);
+  }, [id]);
 
   useEffect(() => {
-    localStorage.setItem("posts", JSON.stringify(posts));
-  }, [posts]);
+    const storedPosts = localStorage.getItem("posts");
+    const allPosts = storedPosts ? JSON.parse(storedPosts) : [];
+    const updatedPosts = allPosts.filter((post: Post) => post.discussionId !== id).concat(posts);
+    localStorage.setItem("posts", JSON.stringify(updatedPosts));
+  }, [posts, id]);
 
   const handlePost = () => {
     if (newTitle.trim() && newContent.trim()) {
       const newPost: Post = {
         id: `${Date.now()}`,
+        discussionId: id!,
         title: newTitle,
         content: newContent,
         date: new Date().toISOString(),
@@ -67,7 +73,6 @@ const Blog: React.FC = () => {
         Discussion about <span className="text-blue-600">{id}</span>
       </h1>
 
-      {/* Post Form */}
       <div className="bg-gray-100 p-6 rounded-lg shadow mb-8">
         <h2 className="text-2xl font-semibold mb-4">Create a New Post</h2>
         <input
@@ -91,7 +96,6 @@ const Blog: React.FC = () => {
         </button>
       </div>
 
-      {/* Posts */}
       <div>
         <h2 className="text-2xl font-semibold mb-4">Posts</h2>
         {posts.length === 0 ? (
