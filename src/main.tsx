@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import React, { useState, useEffect } from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Routes } from 'react-router';
@@ -8,30 +9,26 @@ import WalletApp from './components/Wallet/Wallet';
 import Portefeuille from './components/Wallet/Portefeuille';
 import '@/styles/index.css'
 
+=======
+/* eslint-disable react-refresh/only-export-components */
+>>>>>>> 7651748ce7ba4360c33815725e7e3d6af48cdb64
 
-const Main: React.FC = () => {
-  const [user, setUser] = useState<{ username: string } | null>(null);
+import '@/styles/index.css'
+import { createRoot } from 'react-dom/client'
+import { Route, BrowserRouter as Router, Routes } from 'react-router'
+import Nav from './components/nav'
+import Dashboard from './components/User/Dashboard'
+import LoginForm from './components/User/LoginForm'
+import { UserProvider } from './hook/user-context'
+import Home from './pages/home'
+import Wallet from './pages/wallet'
 
- 
-  useEffect(() => {
-    const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); 
-    }
-  }, []);
+// @ts-expect-error - ça sera fix plus tard
+const root = createRoot(document.getElementById('root'))
 
-  const handleLogin = (username: string, password: string) => {
-    const user = { username, password };
-    localStorage.setItem('user', JSON.stringify(user)); 
-    setUser(user); 
-  };
-
-  const handleLogout = () => {
-    localStorage.removeItem('user'); 
-    setUser(null); 
-  };
-
+const Main = () => {
   return (
+<<<<<<< HEAD
     <Router>
       <Nav user={user} onLogout={handleLogout} />
       <Routes>
@@ -43,5 +40,20 @@ const Main: React.FC = () => {
     </Router>
   );
 };
+=======
+    <UserProvider>
+      <Router>
+        <Nav />
+        <Routes>
+          <Route path='/login' element={<LoginForm />} />
+          <Route path='/' element={<Home />} />
+          <Route path='/dashboard' element={<Dashboard />} />
+          <Route path='/wallet' element={<Wallet />} />
+        </Routes>
+      </Router>
+    </UserProvider>
+  )
+}
+>>>>>>> 7651748ce7ba4360c33815725e7e3d6af48cdb64
 
-ReactDOM.render(<Main />, document.getElementById('root'));
+root.render(<Main />)
