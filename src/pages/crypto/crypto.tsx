@@ -15,6 +15,7 @@ import { Crypto } from '@/types/crypto'
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import CryptoPriceHistory from './crypto-price-history'
+import BlogButton from '@/features/Blog/blogButton'
 
 const CryptoDetails: FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
@@ -89,6 +90,10 @@ const CryptoDetails: FC = () => {
       <article className='space-y-6'>
         <section className='border rounded-xl p-6 w-full'>
           <BuyCrypto crypto={{ price_usd: crypto.price_usd, symbol: crypto.symbol }} />
+        </section>
+
+        <section className='border rounded-xl p-6 w-full'>
+          <BlogButton crypto={{id: cryptoId!, name : crypto.name}}/>
         </section>
 
         <section className='border rounded-xl p-6 w-full'>
