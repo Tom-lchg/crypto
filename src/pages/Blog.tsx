@@ -1,5 +1,12 @@
 import BlogCard from '@/components/blog/blog-card'
 import DialogMsg from '@/components/blog/blog-msg'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 import { UserContext } from '@/hook/user-context'
 import { getCrypto } from '@/lib/coin-lore'
 import { Crypto } from '@/types/crypto'
@@ -21,7 +28,6 @@ const Blog: React.FC = () => {
   const [newTitle, setNewTitle] = useState('')
   const [crypto, setCrypto] = useState<Crypto | null>(null)
   const [newContent, setNewContent] = useState('')
-  const [sortBy] = useState<'date' | 'likes'>('date')
   const { user } = useContext(UserContext)!
 
   useEffect(() => {
@@ -95,21 +101,38 @@ const Blog: React.FC = () => {
 
   if (!crypto) return <div>Loading...</div>
 
-  const sortedPosts = [...posts].sort((a, b) => {
-    if (sortBy === 'date') {
-      return new Date(b.date).getTime() - new Date(a.date).getTime()
-    } else if (sortBy === 'likes') {
-      return b.likes - a.likes
+  const sorting = (value: string) => {
+    console.log(value)
+    let sortedPosts = [...posts]
+
+    switch (value) {
+      case 'likes': {
+        sortedPosts = sortedPosts.sort((a, b) => b.likes - a.likes)
+        break
+      }
+      case 'date': {
+        sortedPosts = sortedPosts.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        )
+        break
+      }
+      default: {
+        sortedPosts = sortedPosts.sort(
+          (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
+        )
+        break
+      }
     }
-    return 0
-  })
+
+    setPosts(sortedPosts)
+  }
 
   if (!crypto) return <div>Loading...</div>
 
-  console.log(crypto)
+  console.log(posts)
 
   return (
-    <section className='max-w-7xl mt-24 mx-auto'>
+    <section className='max-w-7xl mt-24 mx-auto space-y-6'>
       <article className='flex items-start justify-between'>
         <h2 className='text-5xl font-medium'>{crypto.name} Blog</h2>
         <DialogMsg
@@ -118,6 +141,17 @@ const Blog: React.FC = () => {
           setNewTitle={setNewTitle}
         />
       </article>
+
+      <Select onValueChange={sorting}>
+        <SelectTrigger className='w-[100px]'>
+          <SelectValue placeholder='Date' />
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value='date'>Date</SelectItem>
+          <SelectItem value='likes'>Likes</SelectItem>
+        </SelectContent>
+      </Select>
+
       <article className='mt-8 space-y-4'>
         {posts.map((post, key) => (
           <BlogCard
