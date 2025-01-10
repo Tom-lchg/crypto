@@ -2,13 +2,14 @@
 
 import { users } from '@/data/users'
 import { User } from '@/types/user'
-import React, { createContext, FC, useEffect, useState } from 'react'
+import React, { createContext, Dispatch, FC, SetStateAction, useEffect, useState } from 'react'
 import { useToast } from './use-toast'
 
 type UserType = {
   user: User | null
   handleLogout: () => void
   handleLogin: (username: string, password: string) => void
+  setUser: Dispatch<SetStateAction<User | null>>
 }
 
 export const UserContext = createContext<UserType | null>(null)
@@ -51,7 +52,7 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, handleLogout, handleLogin }}>
+    <UserContext.Provider value={{ user, handleLogout, handleLogin, setUser }}>
       {children}
     </UserContext.Provider>
   )

@@ -1,57 +1,55 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { UserContext } from '@/hook/user-context';
-import { useNavigate } from 'react-router';
-import Deposit from '@/features/wallet/deposit';
-import Withdraw from '@/features/wallet/withdraw';
-import Transfer from '@/features/wallet/transfer';
+import Deposit from '@/features/wallet/deposit'
+import Withdraw from '@/features/wallet/withdraw'
+import { UserContext } from '@/hook/user-context'
+import React, { useContext, useEffect, useState } from 'react'
+import { useNavigate } from 'react-router'
 
 interface Transaction {
-  id: number;
-  type: 'deposit' | 'withdrawal' | 'transfer';
-  amount: number;
-  currency: 'USD' | 'BTC' | 'ETH';
-  address?: string;
-  recipient?: string;
-  date: string;
+  id: number
+  type: 'deposit' | 'withdrawal'
+  amount: number
+  currency: 'USD' | 'BTC' | 'ETH'
+  address?: string
+  date: string
 }
 
 interface Wallet {
-  balance: { [key: string]: number };
-  transactions: Transaction[];
+  balance: { [key: string]: number }
+  transactions: Transaction[]
 }
 
 const Wallet: React.FC = () => {
-  const { user } = useContext(UserContext) || {};
+  const { user } = useContext(UserContext) || {}
   const [wallet, setWallet] = useState<Wallet>({
     balance: { USD: 0, BTC: 0, ETH: 0 },
     transactions: [],
-  });
-  const [amount, setAmount] = useState<number>(0);
-  const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD');
-  const [address, setAddress] = useState<string>('');
-  const navigate = useNavigate();
+  })
+  const [, setAmount] = useState<number>(0)
+  const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD')
+  const [, setAddress] = useState<string>('')
+  const navigate = useNavigate()
 
   // Récupérer le portefeuille du localStorage
   useEffect(() => {
-    const savedWallet = localStorage.getItem('wallet');
+    const savedWallet = localStorage.getItem('wallet')
     if (savedWallet) {
-      setWallet(JSON.parse(savedWallet));
+      setWallet(JSON.parse(savedWallet))
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
     // Sauvegarder le portefeuille dans le localStorage après chaque modification
-    localStorage.setItem('wallet', JSON.stringify(wallet));
-  }, [wallet]);
+    localStorage.setItem('wallet', JSON.stringify(wallet))
+  }, [wallet])
 
   useEffect(() => {
-    if (!user) navigate('/login');
-  }, [navigate, user]);
+    if (!user) navigate('/login')
+  }, [navigate, user])
 
   const handleDeposit = (amount: number) => {
     if (isNaN(amount) || amount <= 0) {
-      alert('Please enter a valid amount.');
-      return;
+      alert('Please enter a valid amount.')
+      return
     }
 
     const newTransaction: Transaction = {
@@ -60,24 +58,24 @@ const Wallet: React.FC = () => {
       amount,
       currency,
       date: new Date().toISOString(),
-    };
+    }
 
+    // Mise à jour du portefeuille avec le nouveau solde
     setWallet((prevWallet) => ({
       balance: {
         ...prevWallet.balance,
         [currency]: prevWallet.balance[currency] + amount,
       },
       transactions: [newTransaction, ...prevWallet.transactions],
-    }));
+    }))
 
-    setAmount(0);
-    alert('Deposit successful!');
-  };
+    setAmount(0)
+  }
 
   const handleWithdraw = (amount: number, address: string) => {
     if (isNaN(amount) || amount <= 0 || amount > wallet.balance[currency]) {
-      alert('Please enter a valid amount to withdraw or check your balance.');
-      return;
+      alert('Please enter a valid amount to withdraw or check your balance.')
+      return
     }
 
     const newTransaction: Transaction = {
@@ -87,7 +85,7 @@ const Wallet: React.FC = () => {
       currency,
       address,
       date: new Date().toISOString(),
-    };
+    }
 
     setWallet((prevWallet) => ({
       balance: {
@@ -95,126 +93,62 @@ const Wallet: React.FC = () => {
         [currency]: prevWallet.balance[currency] - amount,
       },
       transactions: [newTransaction, ...prevWallet.transactions],
-    }));
+    }))
 
-    setAmount(0);
-    setAddress('');
-    alert('Withdrawal successful!');
-  };
+    setAmount(0)
+    setAddress('')
+  }
 
-  const handleTransfer = (amount: number, recipientAddress: string) => {
-    if (isNaN(amount) || amount <= 0 || amount > wallet.balance[currency]) {
-      alert('Please enter a valid amount to transfer or check your balance.');
-      return;
-    }
-
-    if (!user) {
-      alert('User is not logged in');
-      return;
-    }
-
-    const newTransaction: Transaction = {
-      id: Date.now(),
-      type: 'transfer',
-      amount,
-      currency,
-      address: wallet.balance[currency].toString(), // optional: tracking sender address
-      recipient: recipientAddress,
-      date: new Date().toISOString(),
-    };
-
-    // Mise à jour du portefeuille de l'expéditeur
-    setWallet((prevWallet) => ({
-      balance: {
-        ...prevWallet.balance,
-        [currency]: prevWallet.balance[currency] - amount,
-      },
-      transactions: [newTransaction, ...prevWallet.transactions],
-    }));
-
-    // Mise à jour du portefeuille du destinataire
-    const savedRecipientWallet = localStorage.getItem('recipientWallet');
-    if (savedRecipientWallet) {
-      const recipientWallet = JSON.parse(savedRecipientWallet);
-      const newRecipientWallet = {
-        ...recipientWallet,
-        balance: {
-          ...recipientWallet.balance,
-          [currency]: recipientWallet.balance[currency] + amount,
-        },
-        transactions: [
-          {
-            id: Date.now(),
-            type: 'transfer',
-            amount,
-            currency,
-            address: recipientWallet.balance[currency].toString(),
-            recipient: user.id, // maintenant on est sûr que `user` est défini
-            date: new Date().toISOString(),
-          },
-          ...recipientWallet.transactions,
-        ],
-      };
-
-      localStorage.setItem('recipientWallet', JSON.stringify(newRecipientWallet));
-    }
-
-    setAmount(0);
-    setAddress('');
-    alert('Transfer successful!');
-  };
-
-  if (!user) return <>Login</>;
+  if (!user) return <>Login</>
 
   return (
-    <main className="max-w-7xl mx-auto mt-24">
-      <section className="space-y-6">
-        <section className="flex gap-8 justify-between">
-          <article className="flex gap-4">
+    <main className='max-w-7xl mx-auto mt-24'>
+      <section className='space-y-6'>
+        <section className='flex gap-8 justify-between'>
+          <article className='flex gap-4'>
             <img
               src={user.avatar}
-              alt=""
-              className="w-36 object-cover rounded-full h-36 border border-zinc-100"
+              alt=''
+              className='w-36 object-cover rounded-full h-36 border border-zinc-100'
             />
-            <h2 className="text-xl font-medium">{user.pseudo}</h2>
+            <h2 className='text-xl font-medium'>{user.pseudo}</h2>
           </article>
           <article>
-            <h2 className="text-zinc-400">UID</h2>
+            <h2 className='text-zinc-400'>UID</h2>
             <h2>{user.id}</h2>
           </article>
           <article>
-            <h2 className="text-zinc-400">VIP Level</h2>
+            <h2 className='text-zinc-400'>VIP Level</h2>
             <h2>Regular User</h2>
           </article>
           <article>
-            <h2 className="text-zinc-400">Following</h2>
+            <h2 className='text-zinc-400'>Following</h2>
             <h2>0</h2>
           </article>
           <article>
-            <h2 className="text-zinc-400">Followers</h2>
+            <h2 className='text-zinc-400'>Followers</h2>
             <h2>0</h2>
           </article>
         </section>
 
-        <article className="rounded-xl border p-6 space-y-2">
-          <div className="flex items-center justify-between">
-            <h2 className="text-2xl font-medium">Estimated Balance</h2>
-            <div className="space-x-3">
+        <article className='rounded-xl border p-6 space-y-2'>
+          <div className='flex items-center justify-between'>
+            <h2 className='text-2xl font-medium'>Estimated Balance</h2>
+            <div className='space-x-3'>
               <Deposit handleDeposit={handleDeposit} setCurrency={setCurrency} />
               <Withdraw handleWithdraw={handleWithdraw} setCurrency={setCurrency} />
-              <Transfer handleTransfer={handleTransfer} setCurrency={setCurrency} />
             </div>
           </div>
 
-          <h2 className="text-4xl font-bold">
-            {wallet.balance.BTC} <span className="font-normal text-sm">btc</span>
+          <h2 className='text-4xl font-bold'>
+            {wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
           </h2>
-          <h2 className="font-medium text-zinc-400">${wallet.balance.USD}</h2>
-          <h2 className="font-medium text-zinc-400">Today's PnL + $0.00(0.00%)</h2>
+          <h2 className='font-medium text-zinc-400'>${wallet.balance.USD}</h2>
+          <h2 className='font-medium text-zinc-400'>Today's PnL + $0.00(0.00%)</h2>
         </article>
       </section>
     </main>
-  );
-};
+  )
+}
 
-export default Wallet;
+export default Wallet

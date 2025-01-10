@@ -8,6 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import UserMessage from '@/components/User/user-message'
+import BlogButton from '@/features/Blog/BlogButton'
 import BuyCrypto from '@/features/crypto/buy'
 import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { getCrypto } from '@/lib/coin-lore'
@@ -103,6 +104,10 @@ const CryptoDetails: FC = () => {
               }}
             />
           </article>
+        </section>
+
+        <section className='border rounded-xl p-6 w-full'>
+          <BlogButton crypto={{ id: cryptoId!, name: crypto.name }} />
         </section>
       </article>
     </section>
