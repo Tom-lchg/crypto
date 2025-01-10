@@ -1,5 +1,7 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import Deposit from '@/features/wallet/deposit'
 import Withdraw from '@/features/wallet/withdraw'
+import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { UserContext } from '@/hook/user-context'
 import React, { useContext, useEffect, useState } from 'react'
 import { useNavigate } from 'react-router'
@@ -140,8 +142,9 @@ const Wallet: React.FC = () => {
           <h2 className='text-4xl font-bold'>
             {wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
           </h2>
-          <h2 className='font-medium text-zinc-400'>${wallet.balance.USD}</h2>
-          <h2 className='font-medium text-zinc-400'>Today's PnL + $0.00(0.00%)</h2>
+          <h2 className='font-medium text-zinc-400'>
+            ${useFormatNumberCrypto(String(wallet.balance.USD))}
+          </h2>
         </article>
 
         <article className='rounded-xl border p-6 space-y-4'>
