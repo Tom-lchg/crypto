@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/rules-of-hooks */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 
 import Deposit from '@/features/wallet/deposit'
 import Withdraw from '@/features/wallet/withdraw'
@@ -25,7 +24,7 @@ interface Wallet {
 const Wallet: React.FC = () => {
   const { user, setUser } = useContext(UserContext) || {}
 
-  const [wallet, setWallet] = useState<Wallet>({
+  const [, setWallet] = useState<Wallet>({
     balance: { USD: 0, BTC: 0, ETH: 0 },
     transactions: [],
   })
