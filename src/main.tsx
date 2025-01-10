@@ -5,14 +5,13 @@ import '@/styles/index.css'
 import { createRoot } from 'react-dom/client'
 import { Route, BrowserRouter as Router, Routes } from 'react-router'
 import Nav from './components/nav'
+import LoginForm from './components/User/LoginForm'
 import { UserProvider } from './hook/user-context'
 import Blog from './pages/Blog'
 import CryptoDetails from './pages/crypto/crypto'
 import Home from './pages/home'
+import Portefeuille from './pages/Portefeuille'
 import Wallet from './pages/wallet'
-
-import LoginForm from './components/User/LoginForm'
-import Portefeuille from './components/Wallet/Portefeuille'
 
 // @ts-expect-error - ça sera fix plus tard
 const root = createRoot(document.getElementById('root'))
@@ -29,7 +28,6 @@ const Main = () => {
           <Route path='/wallet' element={<Wallet />} />
           <Route path='/details/:id' element={<CryptoDetails />} />
           <Route path='/blog/:id' element={<Blog />} />
-          {/* <Route path='/blog/:id' element={<Blog />} /> */}
           <Route path='/portefeuille' element={<Portefeuille />} />
         </Routes>
       </Router>
