@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 
@@ -43,6 +44,7 @@ const Portefeuille: React.FC = () => {
   const [wallet, setWallet] = useState<Wallet>({ balance: {}, transactions: [] })
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({})
   const [cryptos, setCryptos] = useState<string[]>([])
+  const [limitPrices, setLimitPrices] = useState<{ [key: string]: number }>({})
 
   useEffect(() => {
     const loadPricesAndCryptos = async () => {
@@ -89,13 +91,18 @@ const Portefeuille: React.FC = () => {
       return
     }
 
-    const cryptoAmount = usdAmount / cryptoPrices[currency]
+    let price = cryptoPrices[currency]
+    if (orderType === 'limit' && limitPrices[currency]) {
+      price = limitPrices[currency] // Use the user-specified price for limit orders
+    }
+
+    const cryptoAmount = usdAmount / price
     const newTransaction: Transaction = {
       id: Date.now(),
       date: new Date().toISOString(),
       orderType,
       amount: cryptoAmount,
-      price: cryptoPrices[currency],
+      price,
     }
 
     setWallet((prevWallet) => ({
@@ -106,6 +113,16 @@ const Portefeuille: React.FC = () => {
       },
       transactions: [newTransaction, ...prevWallet.transactions],
     }))
+  }
+
+  const handleLimitPriceChange = (currency: string, value: string) => {
+    const price = parseFloat(value)
+    if (!isNaN(price)) {
+      setLimitPrices((prev) => ({
+        ...prev,
+        [currency]: price,
+      }))
+    }
   }
 
   if (!cryptoPrices || cryptos.length === 0) return <div>Loading...</div>
@@ -120,7 +137,7 @@ const Portefeuille: React.FC = () => {
 
       <section className='rounded-xl border p-6 space-y-4'>
         <h2 className='text-2xl font-medium'>Balances</h2>
-        <ul className='divide-y'>
+        <ul className='divide-y divide-zinc-200'>
           {cryptos.map((cryptoSymbol) => (
             <li key={cryptoSymbol} className='flex justify-between items-center py-4'>
               <div className='flex items-center gap-4'>
@@ -135,13 +152,30 @@ const Portefeuille: React.FC = () => {
                   </p>
                 </div>
               </div>
-              <div className='space-x-2'>
-                <Button onClick={() => handleBuyCrypto(cryptoSymbol, 'limit')} variant='outline'>
-                  Buy (Limit)
-                </Button>
-                <Button onClick={() => handleBuyCrypto(cryptoSymbol, 'market')}>
-                  Buy (Market)
-                </Button>
+              <div className='space-y-4'>
+                <div className='flex items-center space-x-2'>
+                  <Input
+                    type='number'
+                    placeholder='Limit price'
+                    onChange={(e) => handleLimitPriceChange(cryptoSymbol, e.target.value)}
+                    className='px-3 py-1 border rounded-md'
+                  />
+                  <Button onClick={() => handleBuyCrypto(cryptoSymbol, 'market')}>
+                    Buy (Market)
+                  </Button>
+                </div>
+
+                <div className='flex items-center space-x-2'>
+                  <Input
+                    type='number'
+                    placeholder='Limit price'
+                    onChange={(e) => handleLimitPriceChange(cryptoSymbol, e.target.value)}
+                    className='px-3 py-1 border rounded-md'
+                  />
+                  <Button onClick={() => handleBuyCrypto(cryptoSymbol, 'limit')}>
+                    Buy (Limit)
+                  </Button>
+                </div>
               </div>
             </li>
           ))}
