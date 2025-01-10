@@ -17,7 +17,7 @@ const Nav: FC = () => {
         <div className='flex items-center space-x-4'>
           {user ? (
             <>
-              <span className='text-lg font-medium text-white'>Bonjour, {user.pseudo}</span>
+              <span className='bg-blue-500 hover:bg-blue-600 text-white py-2 px-4 rounded-md transition-all'>{user.pseudo}</span>
               <button
                 onClick={handleLogout}
                 className='bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded-md transition-all'

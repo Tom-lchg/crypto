@@ -6,7 +6,7 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TableHeader,
+  TableHeader,  
   TableRow,
 } from '@/components/ui/table'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
@@ -102,11 +102,7 @@ const Home: FC = (): JSX.Element => {
                 </TooltipProvider>
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
-                    <TooltipTrigger>
-                      <Link to={`/traide/${crypto.id}`}>
-                        <GitPullRequestCreate size={20} />
-                      </Link>
-                    </TooltipTrigger>
+
                     <TooltipContent>
                       <p>Traide</p>
                     </TooltipContent>
