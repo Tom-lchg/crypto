@@ -1,30 +1,44 @@
-import React, { useState, useEffect } from "react";
-import { useParams } from "react-router";
+import { getCrypto } from '@/lib/coin-lore'
+import React, { useEffect, useState } from 'react'
+import { useParams } from 'react-router'
 
 interface Post {
-  id: string;
-  title: string;
-  content: string;
-  date: string;
-  likes: number;
+  id: string
+  title: string
+  content: string
+  date: string
+  likes: number
 }
 
 const Blog: React.FC = () => {
-  const { id } = useParams<{ id: string }>();
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [newTitle, setNewTitle] = useState("");
-  const [newContent, setNewContent] = useState("");
+  const { id: cryptoId } = useParams<{ id: string }>()
+  const [posts, setPosts] = useState<Post[]>([])
+  const [newTitle, setNewTitle] = useState('')
+  const [newContent, setNewContent] = useState('')
+
+  const [crypto, setCrypto] = useState<Crypto | null>(null)
 
   useEffect(() => {
-    const storedPosts = localStorage.getItem("posts");
+    const storedPosts = localStorage.getItem('posts')
     if (storedPosts) {
-      setPosts(JSON.parse(storedPosts));
+      setPosts(JSON.parse(storedPosts))
     }
-  }, []);
+  }, [])
 
   useEffect(() => {
-    localStorage.setItem("posts", JSON.stringify(posts));
-  }, [posts]);
+    async function getCryptoById(id: number) {
+      const crypto = await getCrypto(Number(id))
+      setCrypto(crypto)
+    }
+
+    if (cryptoId !== undefined) {
+      getCryptoById(Number(cryptoId))
+    }
+  }, [cryptoId])
+
+  useEffect(() => {
+    localStorage.setItem('posts', JSON.stringify(posts))
+  }, [posts])
 
   const handlePost = () => {
     if (newTitle.trim() && newContent.trim()) {
@@ -34,76 +48,38 @@ const Blog: React.FC = () => {
         content: newContent,
         date: new Date().toISOString(),
         likes: 0,
-      };
-      setPosts([newPost, ...posts]);
-      setNewTitle("");
-      setNewContent("");
+      }
+      setPosts([newPost, ...posts])
+      setNewTitle('')
+      setNewContent('')
     }
-  };
+  }
 
   const handleDelete = (postId: string) => {
-    setPosts(posts.filter((post) => post.id !== postId));
-  };
+    setPosts(posts.filter((post) => post.id !== postId))
+  }
 
   const handleLike = (postId: string) => {
-    setPosts(
-      posts.map((post) =>
-        post.id === postId ? { ...post, likes: post.likes + 1 } : post
-      )
-    );
-  };
+    setPosts(posts.map((post) => (post.id === postId ? { ...post, likes: post.likes + 1 } : post)))
+  }
 
   const handleEdit = (postId: string, newTitle: string, newContent: string) => {
     setPosts(
       posts.map((post) =>
         post.id === postId ? { ...post, title: newTitle, content: newContent } : post
       )
-    );
-  };
+    )
+  }
+
+  console.log(crypto)
+
+  if (!crypto) return <div>Loading...</div>
 
   return (
-    <div>
-      <h1>Discussion about {id}</h1>
-      <div>
-        <input
-          type="text"
-          placeholder="Title"
-          value={newTitle}
-          onChange={(e) => setNewTitle(e.target.value)}
-        />
-        <textarea
-          placeholder="Add your post content here..."
-          value={newContent}
-          onChange={(e) => setNewContent(e.target.value)}
-        ></textarea>
-        <button onClick={handlePost}>Post</button>
-      </div>
-      <div>
-        <h2>Posts</h2>
-        {posts.length === 0 ? (
-          <p>No posts yet!</p>
-        ) : (
-          posts.map((post) => (
-            <div key={post.id}>
-              <h3>{post.title}</h3>
-              <p>{post.content}</p>
-              <small>{new Date(post.date).toLocaleString()}</small>
-              <p>Likes: {post.likes}</p>
-              <button onClick={() => handleLike(post.id)}>Like</button>
-              <button onClick={() => handleDelete(post.id)}>Delete</button>
-              <button
-                onClick={() =>
-                  handleEdit(post.id, prompt("New title:") || post.title, prompt("New content:") || post.content)
-                }
-              >
-                Edit
-              </button>
-            </div>
-          ))
-        )}
-      </div>
-    </div>
-  );
-};
+    <section className='max-w-7xl mt-24 mx-auto'>
+      <h2 className='text-5xl font-medium'>{crypto.name} Blog</h2>
+    </section>
+  )
+}
 
-export default Blog;
+export default Blog
