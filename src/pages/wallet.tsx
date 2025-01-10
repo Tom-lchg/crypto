@@ -24,9 +24,9 @@ const Wallet: React.FC = () => {
     balance: { USD: 0, BTC: 0, ETH: 0 },
     transactions: [],
   })
-  const [amount, setAmount] = useState<number>(0)
+  const [, setAmount] = useState<number>(0)
   const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD')
-  const [address, setAddress] = useState<string>('')
+  const [, setAddress] = useState<string>('')
   const navigate = useNavigate()
 
   // Récupérer le portefeuille du localStorage
@@ -70,7 +70,6 @@ const Wallet: React.FC = () => {
     }))
 
     setAmount(0)
-    alert('Deposit successful!')
   }
 
   const handleWithdraw = (amount: number, address: string) => {
@@ -98,7 +97,6 @@ const Wallet: React.FC = () => {
 
     setAmount(0)
     setAddress('')
-    alert('Withdrawal successful!')
   }
 
   if (!user) return <>Login</>
