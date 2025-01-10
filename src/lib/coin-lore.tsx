@@ -42,7 +42,7 @@ export async function getTopVolumeCoin(): Promise<Array<Cryptos>> {
  * @returns
  */
 export async function getCrypto(id: number): Promise<Crypto> {
-  const res = await fetch(`https://api.coinlore.net/api/tickers/?id=${id}`)
+  const res = await fetch(`https://api.coinlore.net/api/ticker/?id=${id}`)
   const data = await res.json()
-  return data.data[0]
+  return data[0]
 }

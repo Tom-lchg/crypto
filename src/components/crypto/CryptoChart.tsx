@@ -18,16 +18,7 @@ interface CryptoChartProps {
 }
 
 const CryptoChart: React.FC<CryptoChartProps> = ({ data }) => {
-  const labels = [
-    '1:00 PM',
-    '4:00 PM',
-    '7:00 PM',
-    '10:00 PM',
-    '1:00 AM',
-    '4:00 AM',
-    '7:00 AM',
-    '10:00 AM',
-  ]
+  const labels = ['7 days', '24h', '1h']
 
   const chartData = {
     labels,
