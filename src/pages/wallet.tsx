@@ -1,16 +1,15 @@
-import Deposit from '@/features/wallet/deposit'
-import Withdraw from '@/features/wallet/withdraw'
-import { UserContext } from '@/hook/user-context'
-import React, { useContext, useEffect, useState } from 'react'
-import { useNavigate } from 'react-router'
+import Deposit from '@/features/wallet/deposit';
+import Withdraw from '@/features/wallet/withdraw';
+import { UserContext } from '@/hook/user-context';
+import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router';
 
 interface Transaction {
-  id: number
-  type: 'deposit' | 'withdrawal'
-  amount: number
-  currency: 'USD' | 'BTC' | 'ETH'
-  address?: string
-  date: string
+  type: 'deposit' | 'withdrawal';
+  amount: number;
+  currency: 'USD' | 'BTC' | 'ETH';
+  address?: string;
+  date: string;
 }
 
 interface Wallet {
@@ -19,15 +18,15 @@ interface Wallet {
 }
 
 const Wallet: React.FC = () => {
-  const { user } = useContext(UserContext) || {}
+  const { user } = useContext(UserContext) || {};
   const [wallet, setWallet] = useState<Wallet>({
     balance: { USD: 0, BTC: 0, ETH: 0 },
     transactions: [],
-  })
-  const [, setAmount] = useState<number>(0)
-  const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD')
-  const [, setAddress] = useState<string>('')
-  const navigate = useNavigate()
+  });
+  const [, setAmount] = useState<number>(0);
+  const [currency, setCurrency] = useState<'USD' | 'BTC' | 'ETH'>('USD');
+  const [, setAddress] = useState<string>('');
+  const navigate = useNavigate();
 
   // Récupérer le portefeuille du localStorage
   useEffect(() => {
@@ -53,7 +52,6 @@ const Wallet: React.FC = () => {
     }
 
     const newTransaction: Transaction = {
-      id: Date.now(),
       type: 'deposit',
       amount,
       currency,
@@ -69,8 +67,8 @@ const Wallet: React.FC = () => {
       transactions: [newTransaction, ...prevWallet.transactions],
     }))
 
-    setAmount(0)
-  }
+    setAmount(0);
+  };
 
   const handleWithdraw = (amount: number, address: string) => {
     if (isNaN(amount) || amount <= 0 || amount > wallet.balance[currency]) {
@@ -79,7 +77,6 @@ const Wallet: React.FC = () => {
     }
 
     const newTransaction: Transaction = {
-      id: Date.now(),
       type: 'withdrawal',
       amount,
       currency,
@@ -95,9 +92,9 @@ const Wallet: React.FC = () => {
       transactions: [newTransaction, ...prevWallet.transactions],
     }))
 
-    setAmount(0)
-    setAddress('')
-  }
+    setAmount(0);
+    setAddress('');
+  };
 
   if (!user) return <>Login</>
 
@@ -140,15 +137,48 @@ const Wallet: React.FC = () => {
             </div>
           </div>
 
-          <h2 className='text-4xl font-bold'>
-            {wallet.balance.BTC} <span className='font-normal text-sm'>btc</span>
+          <h2 className="text-4xl font-bold">
+            {wallet.balance.BTC} <span className="font-normal text-sm">btc</span>
           </h2>
-          <h2 className='font-medium text-zinc-400'>${wallet.balance.USD}</h2>
-          <h2 className='font-medium text-zinc-400'>Today's PnL + $0.00(0.00%)</h2>
+          <h2 className="font-medium text-zinc-400">${wallet.balance.USD}</h2>
+          <h2 className="font-medium text-zinc-400">Today's PnL + $0.00(0.00%)</h2>
+        </article>
+
+        {/* Historique des transactions */}
+        <article className="rounded-xl border p-6 space-y-4">
+          <h2 className="text-2xl font-medium">Transaction History</h2>
+          {wallet.transactions.length === 0 ? (
+            <p className="text-zinc-400">No transactions available.</p>
+          ) : (
+            <ul className="space-y-2">
+              {wallet.transactions.map((transaction, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center border-b pb-2"
+                >
+                  <div>
+                    <h3 className="font-medium">
+                      {transaction.type === 'deposit' ? 'Deposit' : 'Withdrawal'} -{' '}
+                      {transaction.currency}
+                    </h3>
+                    <p className="text-sm text-zinc-500">{transaction.date}</p>
+                  </div>
+                  <h3
+                    className={`${
+                      transaction.type === 'deposit' ? 'text-green-500' : 'text-red-500'
+                    } font-medium`}
+                  >
+                    {transaction.type === 'deposit' ? '+' : '-'}{' '}
+                    {transaction.amount.toLocaleString()} {transaction.currency}
+                  </h3>
+                </li>
+              ))}
+            </ul>
+          )}
         </article>
       </section>
     </main>
-  )
-}
+  );
+};
 
-export default Wallet
+export default Wallet;
