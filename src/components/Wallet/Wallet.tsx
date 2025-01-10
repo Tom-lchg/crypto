@@ -1,4 +1,7 @@
+
+
 import React, { useState, useEffect } from 'react';
+import { users } from '@/data/users';
 
 interface Transaction {
   id: number;
@@ -21,9 +24,9 @@ const WalletApp: React.FC = () => {
   });
   const [amount, setAmount] = useState<number>(0);
   const [currency, setCurrency] = useState<'ETH' | 'USDT' | 'XRP' | 'BNB' | 'SOL'>('ETH');
-  const [address, setAddress] = useState('');
+  const [address, setAddress] = useState<string>('');
+  const [userEmail, setUserEmail] = useState<string>(''); 
 
- 
   useEffect(() => {
     const storedWallet = localStorage.getItem('wallet');
     if (storedWallet) {
@@ -31,13 +34,15 @@ const WalletApp: React.FC = () => {
     }
   }, []);
 
- 
   useEffect(() => {
     localStorage.setItem('wallet', JSON.stringify(wallet));
   }, [wallet]);
 
+
+  const getUserByEmail = (email: string) => users.find(user => user.email === email);
+
   const handleDeposit = () => {
-    if (amount <= 0) {
+    if (amount <= 0 || isNaN(amount)) {
       alert('Enter a valid amount to deposit.');
       return;
     }
@@ -63,13 +68,16 @@ const WalletApp: React.FC = () => {
   };
 
   const handleWithdraw = () => {
-    if (amount <= 0 || amount > wallet.balance[currency]) {
-      alert('Enter a valid amount to withdraw.');
+    
+    const user = getUserByEmail(address);
+    if (!user) {
+      alert('No user found with this email address.');
       return;
     }
 
-    if (!address) {
-      alert('Enter a valid address to withdraw to.');
+   
+    if (amount <= 0 || isNaN(amount) || amount > wallet.balance[currency]) {
+      alert('Enter a valid amount to withdraw.');
       return;
     }
 
@@ -146,7 +154,7 @@ const WalletApp: React.FC = () => {
           type="text"
           value={address}
           onChange={(e) => setAddress(e.target.value)}
-          placeholder="Destination Address"
+          placeholder="Enter the recipient's email address"
         />
         <button onClick={handleWithdraw}>Withdraw</button>
       </div>
@@ -165,4 +173,3 @@ const WalletApp: React.FC = () => {
 };
 
 export default WalletApp;
-
