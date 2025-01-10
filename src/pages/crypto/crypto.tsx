@@ -20,21 +20,19 @@ import CryptoPriceHistory from './crypto-price-history'
 const CryptoDetails: FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
   const [crypto, setCrypto] = useState<Crypto | null>(null)
-  
-const generatePriceData = (basePrice: number, numPoints: number): number[] => {
-  const data = [];
-  let currentPrice = basePrice;
 
-  for (let i = 0; i < numPoints; i++) {
+  const generatePriceData = (basePrice: number, numPoints: number): number[] => {
+    const data = []
+    let currentPrice = basePrice
 
-    const variation = (Math.random() - 0.5) * 10;
-    currentPrice = Math.max(currentPrice + variation, 0);
-    data.push(Number(currentPrice.toFixed(2)));
+    for (let i = 0; i < numPoints; i++) {
+      const variation = (Math.random() - 0.5) * 10
+      currentPrice = Math.max(currentPrice + variation, 0)
+      data.push(Number(currentPrice.toFixed(2)))
+    }
+
+    return data
   }
-
-  return data;
-}; 
-
 
   useEffect(() => {
     async function getCryptoById(id: number) {
@@ -76,12 +74,12 @@ const generatePriceData = (basePrice: number, numPoints: number): number[] => {
 
         <CryptoChart
           data={[
-            generatePriceData(Number(crypto.price_usd), 10),
-            generatePriceData(Number(crypto.price_usd), 5),
-            generatePriceData(Number(crypto.price_usd), 20),
-            generatePriceData(Number(crypto.price_usd), 15),
-            generatePriceData(Number(crypto.price_usd), 10),
-            generatePriceData(Number(crypto.price_usd), 25),
+            generatePriceData(Number(crypto.price_usd), 10)[0],
+            generatePriceData(Number(crypto.price_usd), 5)[0],
+            generatePriceData(Number(crypto.price_usd), 20)[0],
+            generatePriceData(Number(crypto.price_usd), 15)[0],
+            generatePriceData(Number(crypto.price_usd), 10)[0],
+            generatePriceData(Number(crypto.price_usd), 25)[0],
           ]}
         />
 
