@@ -3,13 +3,15 @@ import { UserContext } from '@/hook/user-context';
 import { useNavigate } from 'react-router';
 import Deposit from '@/features/wallet/deposit';
 import Withdraw from '@/features/wallet/withdraw';
+import Transfer from '@/features/wallet/transfer';
 
 interface Transaction {
   id: number;
-  type: 'deposit' | 'withdrawal';
+  type: 'deposit' | 'withdrawal' | 'transfer';
   amount: number;
   currency: 'USD' | 'BTC' | 'ETH';
   address?: string;
+  recipient?: string;
   date: string;
 }
 
@@ -60,7 +62,6 @@ const Wallet: React.FC = () => {
       date: new Date().toISOString(),
     };
 
-    // Mise à jour du portefeuille avec le nouveau solde
     setWallet((prevWallet) => ({
       balance: {
         ...prevWallet.balance,
@@ -101,6 +102,68 @@ const Wallet: React.FC = () => {
     alert('Withdrawal successful!');
   };
 
+  const handleTransfer = (amount: number, recipientAddress: string) => {
+    if (isNaN(amount) || amount <= 0 || amount > wallet.balance[currency]) {
+      alert('Please enter a valid amount to transfer or check your balance.');
+      return;
+    }
+
+    if (!user) {
+      alert('User is not logged in');
+      return;
+    }
+
+    const newTransaction: Transaction = {
+      id: Date.now(),
+      type: 'transfer',
+      amount,
+      currency,
+      address: wallet.balance[currency].toString(), // optional: tracking sender address
+      recipient: recipientAddress,
+      date: new Date().toISOString(),
+    };
+
+    // Mise à jour du portefeuille de l'expéditeur
+    setWallet((prevWallet) => ({
+      balance: {
+        ...prevWallet.balance,
+        [currency]: prevWallet.balance[currency] - amount,
+      },
+      transactions: [newTransaction, ...prevWallet.transactions],
+    }));
+
+    // Mise à jour du portefeuille du destinataire
+    const savedRecipientWallet = localStorage.getItem('recipientWallet');
+    if (savedRecipientWallet) {
+      const recipientWallet = JSON.parse(savedRecipientWallet);
+      const newRecipientWallet = {
+        ...recipientWallet,
+        balance: {
+          ...recipientWallet.balance,
+          [currency]: recipientWallet.balance[currency] + amount,
+        },
+        transactions: [
+          {
+            id: Date.now(),
+            type: 'transfer',
+            amount,
+            currency,
+            address: recipientWallet.balance[currency].toString(),
+            recipient: user.id, // maintenant on est sûr que `user` est défini
+            date: new Date().toISOString(),
+          },
+          ...recipientWallet.transactions,
+        ],
+      };
+
+      localStorage.setItem('recipientWallet', JSON.stringify(newRecipientWallet));
+    }
+
+    setAmount(0);
+    setAddress('');
+    alert('Transfer successful!');
+  };
+
   if (!user) return <>Login</>;
 
   return (
@@ -139,6 +202,7 @@ const Wallet: React.FC = () => {
             <div className="space-x-3">
               <Deposit handleDeposit={handleDeposit} setCurrency={setCurrency} />
               <Withdraw handleWithdraw={handleWithdraw} setCurrency={setCurrency} />
+              <Transfer handleTransfer={handleTransfer} setCurrency={setCurrency} />
             </div>
           </div>
 
@@ -154,4 +218,3 @@ const Wallet: React.FC = () => {
 };
 
 export default Wallet;
-
