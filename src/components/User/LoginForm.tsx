@@ -1,9 +1,11 @@
 import { UserContext } from '@/hook/user-context'
 import React, { FC, useContext, useState } from 'react'
 import { Input } from '../ui/input'
+import { useNavigate } from 'react-router-dom'
 
 const LoginForm: FC = () => {
   const userContext = useContext(UserContext)
+  const navigate = useNavigate();
 
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
@@ -13,6 +15,7 @@ const LoginForm: FC = () => {
     handleLogin(username, password)
     setUsername('')
     setPassword('')
+    navigate('/');
   }
 
   if (!userContext) {
