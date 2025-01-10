@@ -15,7 +15,7 @@ import { Crypto } from '@/types/crypto'
 import { FC, useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import CryptoPriceHistory from './crypto-price-history'
-import BlogButton from '@/features/Blog/blogButton'
+import BlogButton from '@/features/Blog/BlogButton'
 
 const CryptoDetails: FC = () => {
   const { id: cryptoId } = useParams<{ id: string }>()
