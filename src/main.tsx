@@ -10,6 +10,7 @@ import { UserProvider } from './hook/user-context'
 import CryptoDetails from './pages/crypto/crypto'
 import Home from './pages/home'
 import Wallet from './pages/wallet'
+import Blog from './pages/Blog'
 
 // @ts-expect-error - ça sera fix plus tard
 const root = createRoot(document.getElementById('root'))
@@ -25,7 +26,7 @@ const Main = () => {
           <Route path='/dashboard' element={<Dashboard />} />
           <Route path='/wallet' element={<Wallet />} />
           <Route path='/details/:id' element={<CryptoDetails />} />
-          {/* <Route path='/blog/:id' element={<Blog />} /> */}
+          <Route path='/blog/:id' element={<Blog />} />
         </Routes>
       </Router>
     </UserProvider>
