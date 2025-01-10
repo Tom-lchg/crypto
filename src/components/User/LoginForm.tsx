@@ -1,21 +1,28 @@
+import { useToast } from '@/hook/use-toast'
 import { UserContext } from '@/hook/user-context'
 import React, { FC, useContext, useState } from 'react'
-import { Input } from '../ui/input'
 import { useNavigate } from 'react-router-dom'
+import { Input } from '../ui/input'
 
 const LoginForm: FC = () => {
   const userContext = useContext(UserContext)
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const [username, setUsername] = useState<string>('')
   const [password, setPassword] = useState<string>('')
 
+  const { toast } = useToast()
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
-    handleLogin(username, password)
+    if (handleLogin(username, password)) {
+      navigate('/')
+      toast({
+        title: `Bienvenu ${username} 👋`,
+      })
+    }
     setUsername('')
     setPassword('')
-    navigate('/');
   }
 
   if (!userContext) {
@@ -58,7 +65,6 @@ const LoginForm: FC = () => {
             />
           </div>
 
-         
           <button
             type='submit'
             className='w-full bg-blue-500 text-white py-2 rounded-md hover:bg-blue-600 transition-all'

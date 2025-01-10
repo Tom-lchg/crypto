@@ -8,7 +8,7 @@ import { useToast } from './use-toast'
 type UserType = {
   user: User | null
   handleLogout: () => void
-  handleLogin: (username: string, password: string) => void
+  handleLogin: (username: string, password: string) => boolean
   setUser: Dispatch<SetStateAction<User | null>>
 }
 
@@ -33,6 +33,9 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
   const handleLogout = () => {
     localStorage.removeItem('user')
     setUser(null)
+    toast({
+      title: `Au revoir ${user?.pseudo} 👋`,
+    })
   }
 
   const handleLogin = (pseudo: string, password: string) => {
@@ -43,11 +46,13 @@ export const UserProvider: FC<UserProviderProps> = ({ children }) => {
       toast({
         title: 'Vous êtes connecté',
       })
+      return true
     } else {
       toast({
         title: "Nom d'utilisateur ou mot de passe incorrect",
         variant: 'destructive',
       })
+      return false
     }
   }
 
