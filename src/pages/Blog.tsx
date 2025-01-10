@@ -1,9 +1,13 @@
+import BlogCard from '@/components/blog/blog-card'
+import DialogMsg from '@/components/blog/blog-msg'
 import { getCrypto } from '@/lib/coin-lore'
+import { Crypto } from '@/types/crypto'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router'
 
 interface Post {
   id: string
+  discussionId: string
   title: string
   content: string
   date: string
@@ -21,13 +25,15 @@ const Blog: React.FC = () => {
   useEffect(() => {
     const storedPosts = localStorage.getItem('posts')
     if (storedPosts) {
-      setPosts(JSON.parse(storedPosts))
+      const allPosts = JSON.parse(storedPosts) as Post[]
+      setPosts(allPosts.filter((post) => post.discussionId === cryptoId))
     }
-  }, [])
+  }, [cryptoId])
 
   useEffect(() => {
     async function getCryptoById(id: number) {
       const crypto = await getCrypto(Number(id))
+      // @ts-expect-error - fix plus tard
       setCrypto(crypto)
     }
 
@@ -37,13 +43,19 @@ const Blog: React.FC = () => {
   }, [cryptoId])
 
   useEffect(() => {
-    localStorage.setItem('posts', JSON.stringify(posts))
-  }, [posts])
+    const storedPosts = localStorage.getItem('posts')
+    const allPosts = storedPosts ? JSON.parse(storedPosts) : []
+    const updatedPosts = allPosts
+      .filter((post: Post) => post.discussionId !== cryptoId)
+      .concat(posts)
+    localStorage.setItem('posts', JSON.stringify(updatedPosts))
+  }, [posts, cryptoId])
 
   const handlePost = () => {
     if (newTitle.trim() && newContent.trim()) {
       const newPost: Post = {
         id: `${Date.now()}`,
+        discussionId: cryptoId!,
         title: newTitle,
         content: newContent,
         date: new Date().toISOString(),
@@ -77,7 +89,13 @@ const Blog: React.FC = () => {
 
   return (
     <section className='max-w-7xl mt-24 mx-auto'>
-      <h2 className='text-5xl font-medium'>{crypto.name} Blog</h2>
+      <article className='flex items-start justify-between'>
+        <h2 className='text-5xl font-medium'>{crypto.name} Blog</h2>
+        <DialogMsg />
+      </article>
+      <article className='mt-8'>
+        <BlogCard user={{ pseudo: '', avatar: '' }} message='Hello' />
+      </article>
     </section>
   )
 }
