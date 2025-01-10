@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 import { FC, JSX, useState } from 'react'
 
 interface IWhitdrawProps {
@@ -59,10 +60,9 @@ const Withdraw: FC<IWhitdrawProps> = ({ handleWithdraw, setCurrency }): JSX.Elem
             <Input placeholder='Address' onChange={(e) => setMoney(Number(e.target.value))} />
           </div>
         </DialogHeader>
-        <DialogClose>
-          <Button className='w-full' onClick={withd}>
-            Withdraw
-          </Button>
+
+        <DialogClose className={cn(buttonVariants(), 'w-full')} onClick={withd}>
+          Withdraw
         </DialogClose>
       </DialogContent>
     </Dialog>

@@ -35,3 +35,14 @@ export async function getTopVolumeCoin(): Promise<Array<Cryptos>> {
   const cryptos = await getCryptos()
   return cryptos.sort((a, b) => b.volume24 - a.volume24).slice(0, 3)
 }
+
+/**
+ * Récupère les informations d'une crypto
+ * @param nameid
+ * @returns
+ */
+export async function getCrypto(id: number): Promise<Crypto> {
+  const res = await fetch(`https://api.coinlore.net/api/tickers/?id=${id}`)
+  const data = await res.json()
+  return data.data[0]
+}

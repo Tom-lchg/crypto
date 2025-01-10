@@ -34,7 +34,7 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
         <div className="flex items-center space-x-4">
 =======
   return (
-    <nav className='py-4 px-8'>
+    <nav className='py-4 px-8 fixed top-0 w-full bg-background'>
       <div className='flex items-center justify-between'>
         <div className='space-x-4'>
           <Link to='/'>Markets</Link>
@@ -46,7 +46,7 @@ const Nav: FC<NavProps> = ({ user, onLogout }) => {
 >>>>>>> 7651748ce7ba4360c33815725e7e3d6af48cdb64
           {user ? (
             <>
-              <span className='text-lg font-medium text-white'>Bonjour, {user.username}</span>
+              <span className='text-lg font-medium text-white'>Bonjour, {user.pseudo}</span>
               <button
                 onClick={handleLogout}
 <<<<<<< HEAD

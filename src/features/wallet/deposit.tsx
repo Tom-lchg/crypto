@@ -1,4 +1,4 @@
-import { Button, buttonVariants } from '@/components/ui/button'
+import { buttonVariants } from '@/components/ui/button'
 import {
   Dialog,
   DialogClose,
@@ -15,6 +15,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { cn } from '@/lib/utils'
 import { FC, useState } from 'react'
 
 interface IDepositProps {
@@ -58,10 +59,8 @@ const Deposit: FC<IDepositProps> = ({ handleDeposit, setCurrency }): JSX.Element
             </Select>
           </div>
         </DialogHeader>
-        <DialogClose>
-          <Button className='w-full' onClick={depo}>
-            Deposit
-          </Button>
+        <DialogClose className={cn(buttonVariants(), 'w-full')} onClick={depo}>
+          Deposit
         </DialogClose>
       </DialogContent>
     </Dialog>

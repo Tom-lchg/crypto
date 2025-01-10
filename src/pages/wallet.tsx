@@ -68,13 +68,17 @@ const Wallet: React.FC = () => {
   }
 
   return (
-    <main className='max-w-7xl mx-auto mt-14'>
+    <main className='max-w-7xl mx-auto mt-24'>
       <section className='space-y-6'>
         <section className='flex gap-8 justify-between'>
           <article className='flex gap-4'>
-            <div className='w-20 h-20 bg-red-500 rounded-md'></div>
+            <img
+              src={user?.avatar}
+              alt=''
+              className='w-36 object-cover rounded-full h-36 border border-zinc-100'
+            />
             <h2 className='text-xl font-medium'>
-              {user?.username ? user.username : 'user disconnected'}
+              {user?.pseudo ? user.pseudo : 'user disconnected'}
             </h2>
           </article>
           <article>

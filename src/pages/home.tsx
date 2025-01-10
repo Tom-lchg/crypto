@@ -50,7 +50,7 @@ const Home: FC = (): JSX.Element => {
   if (!cryptos || !hotCoins || !topGainerCoin || !topVolumeCoin) return <div>Loading...</div>
 
   return (
-    <main className='max-w-7xl mx-auto mt-14 space-y-8'>
+    <main className='max-w-7xl mx-auto mt-24 space-y-8'>
       <h1 className='text-4xl font-medium'>Markets Overview</h1>
 
       <section className='flex items-center gap-4'>
@@ -91,7 +91,7 @@ const Home: FC = (): JSX.Element => {
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
                     <TooltipTrigger>
-                      <Link to={`/details/${crypto.nameid}`}>
+                      <Link to={`/details/${crypto.id}`}>
                         <Info size={20} />
                       </Link>
                     </TooltipTrigger>
@@ -103,7 +103,7 @@ const Home: FC = (): JSX.Element => {
                 <TooltipProvider>
                   <Tooltip delayDuration={200}>
                     <TooltipTrigger>
-                      <Link to={`/traide/${crypto.nameid}`}>
+                      <Link to={`/traide/${crypto.id}`}>
                         <GitPullRequestCreate size={20} />
                       </Link>
                     </TooltipTrigger>
