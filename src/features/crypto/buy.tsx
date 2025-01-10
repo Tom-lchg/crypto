@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+
 import { useFormatNumberCrypto } from '@/hook/use-convert-number'
 import { cn } from '@/lib/utils'
 import { FC, JSX, useRef, useState } from 'react'

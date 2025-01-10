@@ -1,4 +1,4 @@
-/* eslint-disable react-refresh/only-export-components */
+
 
 import '@/styles/index.css'
 import { createRoot } from 'react-dom/client'

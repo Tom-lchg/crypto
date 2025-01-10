@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
+import { useNavigate } from 'react-router';
 import axios from 'axios';
+import { UserContext } from '@/hook/user-context';  
 
 interface Transaction {
   id: number;
@@ -38,10 +40,18 @@ const cryptoImages: { [key: string]: string } = {
 };
 
 const Portefeuille: React.FC = () => {
+  const { user } = useContext(UserContext) || {};  
   const [wallet, setWallet] = useState<Wallet>({ balance: {}, transactions: [] });
   const [cryptoPrices, setCryptoPrices] = useState<{ [key: string]: number }>({});
   const [cryptos, setCryptos] = useState<string[]>([]);
   const [limitPrices, setLimitPrices] = useState<{ [key: string]: number }>({});
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!user) {
+      navigate('/login');  
+    }
+  }, [user, navigate]);
 
   useEffect(() => {
     const loadPricesAndCryptos = async () => {
@@ -90,7 +100,7 @@ const Portefeuille: React.FC = () => {
 
     let price = cryptoPrices[currency];
     if (orderType === 'limit' && limitPrices[currency]) {
-      price = limitPrices[currency]; // Use the user-specified price for limit orders
+      price = limitPrices[currency]; 
     }
 
     const cryptoAmount = usdAmount / price;

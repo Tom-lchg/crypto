@@ -1,5 +1,3 @@
-/* eslint-disable react-hooks/rules-of-hooks */
-
 import MarketOverviewCard from '@/components/market-overview-card'
 import {
   Table,

@@ -1,4 +1,4 @@
-/* eslint-disable react-hooks/rules-of-hooks */
+
 import CryptoChart from '@/components/crypto/CryptoChart'
 import {
   Select,
